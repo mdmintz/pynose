@@ -1,33 +1,33 @@
 # pynose
 
-### pynose fixes nose to extend unittest and make testing easier
+### ``pynose`` fixes `nose` to extend unittest and make testing easier
 
 --------
 
-``pynose`` is an updated version of "nose", originally made by Jason Pellerin.
+``pynose`` is an updated version of `nose`, originally made by Jason Pellerin.
 
-This version of nose is compatible with Python 3.6+ (including 3.11 & up).
+This version of `nose` is compatible with Python 3.6+ (including 3.11 & up).
 
-Changes from legacy "nose" include:
+Changes in ``pynose`` from legacy `nose` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
-* Fixes all ``flake8`` issues from the original ``nose``.
-* The default logging level was changed to hide "debug"-level logs.
+* Fixes all ``flake8`` issues from the original `nose`.
+* The default logging level was updated to hide "debug"-level logs.
 * The old unit tests are no longer included with the repo to save space.
 
 --------
 
-The original description of ``nose``:
+The original description of `nose`:
 
-nose extends the test loading and running features of unittest, making
+>nose extends the test loading and running features of unittest, making
 it easier to write, find and run tests.
 
-By default, nose runs tests in files or directories under the current
+>By default, nose runs tests in files or directories under the current
 working directory whose names include "test" or "Test" at a word
 boundary (like "test_this" or "functional_test" or "TestClass" but not
 "libtest"). Test output is similar to that of unittest, but also includes
 captured stdout output from failing tests, for easy print-style debugging.
 
-These features, and many more, are customizable through the use of
+>These features, and many more, are customizable through the use of
 plugins. Plugins included with nose provide support for doctest, code
 coverage and profiling, flexible attribute-based test selection,
 output capture and more. More information about writing plugins
