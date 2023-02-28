@@ -379,9 +379,7 @@ class ContextSuiteFactory(object):
         return self.makeSuite(tests, context, **kw)
 
     def ancestry(self, context):
-        """Return the ancestry of the context (that is, all of the
-        packages and modules containing the context), in order of
-        descent with the outermost ancestor last.
+        """This method returns the packages and modules containing the context.
         This method is a generator."""
         log.debug("get ancestry %s", context)
         if context is None:
@@ -439,8 +437,7 @@ class ContextSuiteFactory(object):
         """The complex case where there are tests that don't all share
         the same context. Groups tests into suites with common ancestors,
         according to the following (essentially tail-recursive) procedure:
-
-        Starting with the context of the first test, if it is not
+        * Starting with the context of the first test, if it is not
         None, look for tests in the remaining tests that share that
         ancestor. If any are found, group into a suite with that
         ancestor as the context, and replace the current suite with

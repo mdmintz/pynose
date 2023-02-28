@@ -1,35 +1,25 @@
-"""
-Adds a sphinx directive that can be used to automatically document a plugin.
-
-this::
-
+"""Adds a sphinx directive that can be used to automatically document a plugin.
+This:
  .. autoplugin :: nose.plugins.foo
     :plugin: Pluggy
 
-produces::
-
+Produces:
   .. automodule :: nose.plugins.foo
 
   Options
   -------
-
   .. cmdoption :: --foo=BAR, --fooble=BAR
-
     Do the foo thing to the new thing.
 
   Plugin
   ------
-
   .. autoclass :: nose.plugins.foo.Pluggy
      :members:
 
   Source
   ------
-
   .. include :: path/to/nose/plugins/foo.py
-     :literal:
-
-"""
+     :literal: """
 import os
 try:
     from docutils import nodes, utils
@@ -37,7 +27,6 @@ try:
     from docutils.parsers.rst import directives
 except ImportError:
     pass
-
 from nose.util import resolve_name
 from nose.plugins.base import Plugin
 from nose.plugins.manager import BuiltinPluginManager

@@ -24,7 +24,6 @@ the --exe flag (see 'Options' section below).
 
 Selecting Tests
 ---------------
-
 To specify which tests to run, pass test names on the command line:
 
   nosetests only_test_this.py
@@ -61,7 +60,6 @@ in the options below.
 
 Configuration
 -------------
-
 In addition to passing command-line options, you may also put
 configuration options in your project's *setup.cfg* file, or a .noserc
 or nose.cfg file in your home directory. In any of these standard
@@ -80,7 +78,6 @@ with the ``-c`` option.
 
 Using Plugins
 -------------
-
 There are numerous nose plugins available via easy_install and
 elsewhere. To use a plugin, just install it. The plugin will add
 command line options to nosetests. To verify that the plugin is installed,

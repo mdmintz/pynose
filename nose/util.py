@@ -80,8 +80,6 @@ def _ls_tree_lines(dir_path, skip_pattern,
 
 
 def absdir(path):
-    """Return absolute, normalized path to directory, if it exists; None
-    otherwise."""
     if not os.path.isabs(path):
         path = os.path.normpath(
             os.path.abspath(os.path.join(os.getcwd(), path))
@@ -92,7 +90,6 @@ def absdir(path):
 
 
 def absfile(path, where=None):
-    """Return absolute, normalized path to file."""
     orig = path
     if where is None:
         where = os.getcwd()

@@ -1,9 +1,8 @@
 """
 Test Selection
 --------------
-Test selection is handled by a Selector. The test loader calls the
-appropriate selector method for each object it encounters that it
-thinks may be a test."""
+The test loader calls the appropriate selector method for each object
+it encounters that it thinks may be a test."""
 import logging
 import os
 import unittest
@@ -113,10 +112,9 @@ class Selector(object):
 
     def wantFile(self, file):
         """Is the file a wanted test file?
-        The file must be a python source file and match testMatch or
-        include, and not match exclude. Files that match ignore are *never*
-        wanted, regardless of plugin, testMatch, include or exclude settings.
-        """
+        The file must be a python source file and match testMatch or include,
+        and not match exclude. Files that match ignore are *never* wanted,
+        regardless of plugin, testMatch, include or exclude settings."""
         # never load files that match anything in ignore
         # (.* _* and *setup*.py by default)
         base = op_basename(file)

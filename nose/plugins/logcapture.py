@@ -73,7 +73,7 @@ class MyMemoryHandler(Handler):
         self.buffer.append(self.format(record))
 
     def flush(self):
-        pass  # do nothing
+        pass
 
     def truncate(self):
         self.buffer = []
@@ -155,8 +155,6 @@ class LogCapture(Plugin):
     def configure(self, options, conf):
         """Configure plugin."""
         self.conf = conf
-        # Disable if explicitly disabled, or if logging is
-        # configured via logging config file
         if not options.logcapture or conf.loggingConfig:
             self.enabled = False
         self.logformat = options.logcapture_format
@@ -177,12 +175,6 @@ class LogCapture(Plugin):
                 if hasattr(logger, "handlers"):
                     for handler in logger.handlers:
                         logger.removeHandler(handler)
-        # make sure there isn't one already
-        # you can't simply use "if self.handler not in root_logger.handlers"
-        # since at least in unit tests this doesn't work --
-        # LogCapture() is instantiated for each test case while root_logger
-        # is module global
-        # so we always add new MyMemoryHandler instance
         for handler in root_logger.handlers[:]:
             if isinstance(handler, MyMemoryHandler):
                 root_logger.handlers.remove(handler)
