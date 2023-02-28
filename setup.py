@@ -75,9 +75,16 @@ setup(
     author_email="mdmintz@gmail.com",
     description=description,
     long_description=long_description,
+    long_description_content_type="text/markdown",
     license="MIT",
     keywords="test unittest doctest automatic discovery",
     url="https://github.com/mdmintz/pynose",
+    project_urls={
+        "Download": "https://pypi.org/project/pynose/#files",
+        "PyPI": "https://pypi.org/project/pynose/",
+        "Source": "https://github.com/mdmintz/pynose",
+        "Documentation": "https://nose.readthedocs.io/en/latest/",
+    },
     package_data={"": ["*.txt"]},
     python_requires=">=3.6",
     classifiers=[
