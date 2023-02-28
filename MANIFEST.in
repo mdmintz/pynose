@@ -1,0 +1,7 @@
+include LICENSE
+include README.md
+include setup.cfg
+include .gitignore
+include bin/nosetests
+include bin/pynose
+include nose/usage.txt
