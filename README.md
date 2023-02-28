@@ -5,6 +5,7 @@
 --------
 
 ``pynose`` is an updated version of "nose", originally made by Jason Pellerin.
+
 This version of nose is compatible with Python 3.6+ (including 3.11 & up).
 
 Changes from legacy "nose" include:
@@ -12,6 +13,8 @@ Changes from legacy "nose" include:
 * Fixes all ``flake8`` issues from the original ``nose``.
 * The default logging level was changed to hide "debug"-level logs.
 * The old unit tests are no longer included with the repo to save space.
+
+--------
 
 The original description of ``nose``:
 
