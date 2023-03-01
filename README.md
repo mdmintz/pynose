@@ -2,7 +2,7 @@
 
 ### ``pynose`` fixes ``nose`` to extend [unittest](https://docs.python.org/3/library/unittest.html) and make testing easier.
 
-(NOTE: If you can, use **[pytest](https://docs.pytest.org/)** instead. **[pynose](https://github.com/mdmintz/pynose)** was built to maintain **[nose](https://pypi.org/project/nose/)** for developers who still use it.)
+(NOTE: If you can, use **[pytest](https://docs.pytest.org/)** instead. **[pynose](https://github.com/mdmintz/pynose)** was built to maintain **[nose](https://nose.readthedocs.io/en/latest/)** for developers who still use it.)
 
 --------
 
