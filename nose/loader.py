@@ -23,7 +23,6 @@ from nose.suite import ContextSuiteFactory, ContextList, LazySuite
 from nose.pyversion import sort_list, cmp_to_key
 import collections
 
-
 log = logging.getLogger(__name__)
 op_normpath = os.path.normpath
 op_abspath = os.path.abspath
@@ -251,8 +250,9 @@ class TestLoader(unittest.TestLoader):
                 raise
             except Exception:
                 exc = sys.exc_info()
-                yield Failure(exc[0], exc[1], exc[2],
-                              address=test_address(generator))
+                yield Failure(
+                    exc[0], exc[1], exc[2], address=test_address(generator)
+                )
         return self.suiteClass(generate, context=generator, can_split=False)
 
     def loadTestsFromModule(self, module, path=None, discovered=False):
@@ -321,8 +321,9 @@ class TestLoader(unittest.TestLoader):
             if isinstance(obj, Failure):
                 return suite([obj])
             else:
-                return suite(ContextList([self.makeTest(obj, parent)],
-                                         context=parent))
+                return suite(
+                    ContextList([self.makeTest(obj, parent)], context=parent)
+                )
         else:
             if addr.module:
                 try:

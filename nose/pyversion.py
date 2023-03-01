@@ -84,8 +84,9 @@ class UnboundMethod:
         return getattr(self._func, attr)
 
     def __repr__(self):
-        return '<unbound method %s.%s>' % (self.__self__.cls.__name__,
-                                           self._func.__name__)
+        return '<unbound method %s.%s>' % (
+            self.__self__.cls.__name__, self._func.__name__
+        )
 
 
 class UnboundSelf:
@@ -134,12 +135,10 @@ def exc_to_unicode(ev, encoding='utf-8'):
 def format_exception(exc_info, encoding='UTF-8'):
     ec, ev, tb = exc_info
     if not is_base_exception(ev):
-        tb_data = force_unicode(
-                ''.join(traceback.format_tb(tb)),
-                encoding)
+        tb_data = force_unicode(''.join(traceback.format_tb(tb)), encoding)
         ev = exc_to_unicode(ev)
         return tb_data + ev
     else:
         return force_unicode(
-                ''.join(traceback.format_exception(*exc_info)),
-                encoding)
+            ''.join(traceback.format_exception(*exc_info)), encoding
+        )

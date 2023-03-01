@@ -21,11 +21,12 @@ class Test(unittest.TestCase):
     __test__ = False  # do not collect
 
     def __init__(self, test, config=None, resultProxy=None):
-        # sanity check
         if not isinstance(test, collections.Callable):
-            raise TypeError("nose.case.Test called with argument %r that "
-                            "is not callable. A callable is required."
-                            % test)
+            raise TypeError(
+                "nose.case.Test called with argument %r that "
+                "is not callable. A callable is required."
+                % test
+            )
         self.test = test
         if config is None:
             config = Config()
@@ -68,12 +69,10 @@ class Test(unittest.TestCase):
             beforeTest(self.test)
 
     def exc_info(self):
-        """Extract exception info."""
         exc, exv, tb = sys.exc_info()
         return (exc, exv, tb)
 
     def id(self):
-        """Get a short(er) description of the test"""
         return self.test.id()
 
     def address(self):
@@ -270,7 +269,6 @@ class MethodTestCase(TestBase):
           case, a new instance of the method's class will be instantiated to
           make the call.  Note: In Python 3.x, if using an unbound method, you
           must wrap it using pyversion.unbound_method.
-
         Optional arguments:
         * test -- the test function to call. If this is passed, it will be
           called instead of getting a new bound method of the same name as the
@@ -302,9 +300,7 @@ class MethodTestCase(TestBase):
             name = func.compat_func_name
         else:
             name = func.__name__
-        name = "%s.%s.%s" % (self.cls.__module__,
-                             self.cls.__name__,
-                             name)
+        name = "%s.%s.%s" % (self.cls.__module__, self.cls.__name__, name)
         if arg:
             name = "%s%s" % (name, arg)
         return name
