@@ -1,6 +1,6 @@
 # pynose
 
-### ``pynose`` fixes `nose` to extend unittest and make testing easier
+### ``pynose`` fixes `nose` to extend `unittest` and make testing easier.
 
 --------
 
@@ -11,8 +11,8 @@ This version of `nose` is compatible with Python 3.6+ (including 3.11 & up).
 Changes in ``pynose`` from legacy `nose` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
 * Fixes all ``flake8`` issues from the original `nose`.
-* The default logging level was updated to hide "debug"-level logs.
-* The old unit tests are no longer included with the repo to save space.
+* The default logging level now hides "debug" logs.
+* Adds ``--co`` as a shortcut to using ``--collect-only``.
 
 --------
 
@@ -549,7 +549,7 @@ Options
    Enable plugin AllModules: Collect tests from all python modules.
    [NOSE_ALL_MODULES]
 
---collect-only
+--co, --collect-only
 
    Enable collect-only: Collect and output test names only,
    but do not run any tests. [COLLECT_ONLY]
