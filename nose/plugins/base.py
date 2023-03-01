@@ -11,19 +11,16 @@ class Plugin(object):
     `options(self, parser, env)` and `configure(self, options, conf)`, and
     must have the attributes `enabled`, `name` and `score`.  The `name`
     attribute may contain hyphens ('-').
-
     Plugins should not be enabled by default.
-
     Subclassing Plugin (and calling the superclass methods in
     __init__, configure, and options, if you override them) will give
     your plugin some friendly default behavior:
-
     * A --with-$name option will be added to the command line interface
       to enable the plugin, and a corresponding environment variable
       will be used as the default value. The plugin class's docstring
       will be used as the help for this option.
     * The plugin will not be enabled unless this option is selected by
-      the user. """
+      the user."""
     can_configure = False
     enabled = False
     enableOpt = None
@@ -91,11 +88,9 @@ class Plugin(object):
         """Return help for this plugin. This will be output as the help
         section of the --with-$name option that enables the plugin."""
         if self.__class__.__doc__:
-            # doc sections are often indented; compress the spaces
             return textwrap.dedent(self.__class__.__doc__)
         return "(no help available)"
 
-    # Compatiblity shim
     def tolist(self, val):
         warn("Plugin.tolist is deprecated. Use nose.util.tolist instead",
              DeprecationWarning)
@@ -152,9 +147,7 @@ class IPluginInterface(object):
 
     def addSkip(self, test):
         """Called when a test is skipped. DO NOT return a value unless
-        you want to stop other plugins from seeing the skipped test.
-
-        .. warning:: DEPRECATED -- check error class in addError instead """
+        you want to stop other plugins from seeing the skipped test."""
         pass
 
     addSkip.deprecated = True
@@ -307,7 +300,6 @@ class IPluginInterface(object):
 
     formatError._new = True
     formatError.chainable = True
-    # test arg is not chainable
     formatError.static_args = (True, False)
 
     def formatFailure(self, test, err):
@@ -323,7 +315,6 @@ class IPluginInterface(object):
 
     formatFailure._new = True
     formatFailure.chainable = True
-    # test arg is not chainable
     formatFailure.static_args = (True, False)
 
     def handleError(self, test, err):
@@ -373,12 +364,7 @@ class IPluginInterface(object):
         :param module: The module object
         :type module: python module
         :param path: the path of the module to search, to distinguish from
-            namespace package modules
-
-            .. note::
-
-               NEW. The ``path`` parameter will only be passed by nose 0.11
-               or above."""
+            namespace package modules """
         pass
 
     loadTestsFromModule.generative = True
@@ -394,9 +380,7 @@ class IPluginInterface(object):
             whatever you want.
         :param module: Module from which the name is to be loaded
         :param importPath: Path from which file (must be a python module) was
-            found
-
-            .. warning:: DEPRECATED: this argument will NOT be passed."""
+            found """
         pass
 
     loadTestsFromName.generative = True
@@ -420,19 +404,13 @@ class IPluginInterface(object):
         interested in loading any tests, or an iterable if you are and
         can load some. May be a generator. *If you are interested in
         loading tests from the file and encounter no errors, but find
-        no tests, yield False or return [False].*
-
-        .. Note:: This method replaces loadTestsFromPath from the 0.9
-                  API.
-
-        :param filename: The full path to the file or directory."""
+        no tests, yield False or return [False].* """
         pass
 
     loadTestsFromFile.generative = True
     loadTestsFromFile._new = True
 
     def loadTestsFromPath(self, path):
-        """.. warning:: DEPRECATED -- use loadTestsFromFile instead"""
         pass
 
     loadTestsFromPath.deprecated = True
@@ -680,8 +658,6 @@ class IPluginInterface(object):
         pass
 
     def wantModuleTests(self, module):
-        """warning:: DEPRECATED -- this method will not be called, it has
-                     been folded into wantModule. """
         pass
 
     wantModuleTests.deprecated = True

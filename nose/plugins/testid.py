@@ -132,14 +132,10 @@ class TestId(Plugin):
         if not os.path.isabs(self.idfile):
             self.idfile = os.path.join(conf.workingDir, self.idfile)
         self.id = 1
-        # Ids and tests are mirror images: ids are {id: test address} and
-        # tests are {test address: id}
         self.ids = {}
         self.tests = {}
         self.failed = []
         self.source_names = []
-        # used to track ids seen when tests is filled from
-        # loaded ids file
         self._seen = {}
         self._write_hashes = conf.verbosity >= 2
 
@@ -173,7 +169,6 @@ class TestId(Plugin):
                 self.failed = data['failed']
                 self.source_names = data['source_names']
             else:
-                # old ids field
                 self.ids = data
                 self.failed = []
                 self.source_names = names
@@ -250,9 +245,7 @@ class TestId(Plugin):
 
     def startTest(self, test):
         """Maybe output an id # before the test name.
-
-        Example output::
-
+        Example output:
           #1 test.test ... ok
           #2 test.test_two ... ok """
         adr = test.address()

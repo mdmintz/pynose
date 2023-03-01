@@ -178,7 +178,6 @@ class Coverage(Plugin):
         ]
         log.debug("Coverage report will cover modules: %s", modules)
         self.coverInstance.report(modules, file=stream)
-
         import coverage
         if self.coverHtmlDir:
             log.debug("Generating HTML coverage report")
@@ -186,28 +185,22 @@ class Coverage(Plugin):
                 self.coverInstance.html_report(modules, self.coverHtmlDir)
             except coverage.misc.CoverageException as e:
                 log.warning("Failed to generate HTML report: %s" % str(e))
-
         if self.coverXmlFile:
             log.debug("Generating XML coverage report")
             try:
                 self.coverInstance.xml_report(modules, self.coverXmlFile)
             except coverage.misc.CoverageException as e:
                 log.warning("Failed to generate XML report: %s" % str(e))
-
-        # make sure we have minimum required coverage
         if self.coverMinPercentage:
             f = io.StringIO()
             self.coverInstance.report(modules, file=f)
-
             multiPackageRe = (r'-------\s\w+\s+\d+\s+\d+(?:\s+\d+\s+\d+)?'
                               r'\s+(\d+)%\s+\d*\s{0,1}$')
             singlePackageRe = (r'-------\s[\w./]+\s+\d+\s+\d+(?:\s+\d+\s+\d+)?'
                                r'\s+(\d+)%(?:\s+[-\d, ]+)\s{0,1}$')
-
             m = re.search(multiPackageRe, f.getvalue())
             if m is None:
                 m = re.search(singlePackageRe, f.getvalue())
-
             if m:
                 percentage = int(m.groups()[0])
                 if percentage < self.coverMinPercentage:
@@ -240,14 +233,9 @@ class Coverage(Plugin):
         if self.conf.testMatch.search(name) and not self.coverTests:
             log.debug("no coverage for %s: is a test", name)
             return False
-        # accept any package that passed the previous tests, unless
-        # coverPackages is on -- in that case, if we wanted this
-        # module, we would have already returned True
         return not self.coverPackages
 
     def wantFile(self, file, package=None):
-        """If inclusive coverage enabled, return true for all source files
-        in wanted packages."""
         if self.coverInclusive:
             if file.endswith(".py"):
                 if package and self.coverPackages:

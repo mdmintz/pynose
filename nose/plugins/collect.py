@@ -1,13 +1,13 @@
 """This plugin bypasses the actual execution of tests, and instead just
-collects test names. Fixtures are also bypassed, so running nosetests with the
-collection plugin enabled should be very quick.
+collects test names. Fixtures are also bypassed.
+Running nosetests with the collection plugin enabled should be very quick.
 
 This plugin is useful in combination with the testid plugin (``--with-id``).
 Run both together to get an indexed list of all tests, which will enable you to
 run individual tests by index number.
 
-This plugin is also useful for counting tests in a test suite, and making
-people watching your demo think all of your tests pass."""
+This plugin is also useful for counting tests in a test suite,
+and making people watching your demo think all of your tests pass."""
 from nose.plugins.base import Plugin
 from nose.case import Test
 import logging
@@ -25,6 +25,7 @@ class CollectOnly(Plugin):
     def options(self, parser, env):
         """Register commandline options."""
         parser.add_option('--collect-only',
+                          '--co',
                           action='store_true',
                           dest=self.enableOpt,
                           default=env.get('NOSE_COLLECT_ONLY'),
@@ -33,20 +34,16 @@ class CollectOnly(Plugin):
 
     def prepareTestLoader(self, loader):
         """Install collect-only suite class in TestLoader."""
-        # Disable context awareness
         log.debug("Preparing test loader")
         loader.suiteClass = TestSuiteFactory(self.conf)
 
     def prepareTestCase(self, test):
         """Replace actual test with dummy that always passes."""
-        # Return something that always passes
         log.debug("Preparing test case %s", test)
         if not isinstance(test, Test):
             return
 
         def run(result):
-            # We need to make these plugin calls because there won't be
-            # a result proxy, due to using a stripped-down test suite
             self.conf.plugins.startTest(test)
             result.startTest(test)
             self.conf.plugins.addSuccess(test)
@@ -70,7 +67,6 @@ class TestSuite(unittest.TestSuite):
     wrap tests in a nose.case.Test so prepareTestCase will be called."""
     def __init__(self, tests=(), conf=None):
         self.conf = conf
-        # Exec lazy suites: makes discovery depth-first
         if isinstance(tests, collections.Callable):
             tests = tests()
         log.debug("TestSuite(%r)", tests)
