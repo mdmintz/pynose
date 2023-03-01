@@ -1,22 +1,24 @@
 # pynose
 
-### ``pynose`` fixes `nose` to extend `unittest` and make testing easier.
+### ``pynose`` fixes ``nose`` to extend [unittest](https://docs.python.org/3/library/unittest.html) and make testing easier.
+
+(NOTE: If you can, you should use the newer **[pytest](https://docs.pytest.org/)** instead. **[pynose](https://github.com/mdmintz/pynose)** was created to maintain **[nose](https://pypi.org/project/nose/)** for developers who still use it.)
 
 --------
 
-``pynose`` is an updated version of `nose`, originally made by Jason Pellerin.
+``pynose`` is an updated version of ``nose``, originally made by Jason Pellerin.
 
-This version of `nose` is compatible with Python 3.6+ (including 3.11 & up).
+This version of ``nose`` is compatible with Python 3.6+ (including 3.11 & up).
 
-Changes in ``pynose`` from legacy `nose` include:
+Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
-* Fixes all ``flake8`` issues from the original `nose`.
+* Fixes all ``flake8`` issues from the original ``nose``.
 * The default logging level now hides "debug" logs.
 * Adds ``--co`` as a shortcut to using ``--collect-only``.
 
 --------
 
-The original description of `nose`:
+The original description of ``nose``:
 
 >nose extends the test loading and running features of unittest, making
 it easier to write, find and run tests.
