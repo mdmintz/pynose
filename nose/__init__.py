@@ -1,6 +1,5 @@
 import sys
 from nose.core import collector, main, run, run_exit, runmodule
-# backwards compatibility
 from nose.exc import SkipTest, DeprecatedTest
 from nose.tools import with_setup
 from nose.__version__ import __version__

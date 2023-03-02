@@ -35,16 +35,8 @@ class Plugin(object):
 
     def addOptions(self, parser, env=None):
         """Add command-line options for this plugin.
-
-        The base plugin class adds --with-$name by default, used to enable the
-        plugin.
-
-        .. warning :: Don't implement addOptions unless you want to override
-                      all default option handling behavior, including
-                      warnings for conflicting options. Implement
-                      :meth:`options
-                      <nose.plugins.base.IPluginInterface.options>`
-                      instead."""
+        The base plugin class adds --with-$name by default,
+        used to enable the plugin."""
         self.add_options(parser, env)
 
     def add_options(self, parser, env=None):

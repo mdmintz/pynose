@@ -1,12 +1,9 @@
 """Attribute selector plugin.
-
 Oftentimes when testing you will want to select tests based on
 criteria rather then simply by filename. For example, you might want
 to run all tests except for the slow ones. You can do this with the
 Attribute selector plugin by setting attributes on your test methods.
 Here is an example:
-
-.. code-block:: python
 
     def test_big_download():
         import urllib
@@ -22,8 +19,6 @@ test and all other tests having the slow attribute by running ::
 There is also a decorator available for you that will set attributes.
 Here's how to set ``slow=1`` like above with the decorator:
 
-.. code-block:: python
-
     from nose.plugins.attrib import attr
     @attr('slow')
     def test_big_download():
@@ -32,22 +27,18 @@ Here's how to set ``slow=1`` like above with the decorator:
 
 And here's how to set an attribute with a specific value:
 
-.. code-block:: python
-
     from nose.plugins.attrib import attr
     @attr(speed='slow')
     def test_big_download():
         import urllib
         # commence slowness...
 
-This test could be run with ::
+This test could be run with:
 
     $ nosetests -a speed=slow
 
 In Python 2.6 and higher, ``@attr`` can be used on a class to set attributes
-on all its test methods at once.  For example:
-
-.. code-block:: python
+on all its test methods at once. For example:
 
     from nose.plugins.attrib import attr
     @attr(speed='slow')
@@ -63,24 +54,18 @@ Simple syntax
 -------------
 
 Examples of using the ``-a`` and ``--attr`` options:
-
 * ``nosetests -a status=stable``
    Only runs tests with attribute "status" having value "stable"
-
 * ``nosetests -a priority=2,status=stable``
    Runs tests having both attributes and values
-
 * ``nosetests -a priority=2 -a slow``
    Runs tests that match either attribute
-
 * ``nosetests -a tags=http``
    If a test's ``tags`` attribute was a list and it contained the value
    ``http`` then it would be run
-
 * ``nosetests -a slow``
    Runs tests with the attribute ``slow`` if its value does not equal False
    (False, [], "", etc...)
-
 * ``nosetests -a '!slow'``
    Runs tests that do NOT have the attribute ``slow`` or have a ``slow``
    attribute that is equal to False
@@ -92,10 +77,8 @@ Expression Evaluation
 ---------------------
 
 Examples using the ``-A`` and ``--eval-attr`` options:
-
 * ``nosetests -A "not slow"``
   Evaluates the Python expression "not slow" and runs the test if True
-
 * ``nosetests -A "(priority > 5) and not slow"``
   Evaluates a complex Python expression and runs the test if True """
 import logging
@@ -168,47 +151,34 @@ class AttributeSelector(Plugin):
 
         attr and eval_attr may each be lists.
 
-        self.attribs will be a list of lists of tuples. In that list, each
-        list is a group of attributes, all of which must match for the rule to
-        match."""
+        self.attribs will be a list of lists of tuples.
+        In that list, each list is a group of attributes,
+        all of which must match for the rule to match."""
         self.attribs = []
-
-        # handle python eval-expression parameter
         if options.eval_attr:
             eval_attr = tolist(options.eval_attr)
             for attr in eval_attr:
-                # "<python expression>"
-                # -> eval(expr) in attribute context must be True
                 def eval_in_context(expr, obj, cls):
                     return eval(expr, None, ContextHelper(obj, cls))
                 self.attribs.append([(attr, eval_in_context)])
-
         # attribute requirements are a comma separated list of
         # 'key=value' pairs
         if options.attr:
             std_attr = tolist(options.attr)
             for attr in std_attr:
-                # all attributes within an attribute group must match
                 attr_group = []
                 for attrib in attr.strip().split(","):
-                    # don't die on trailing comma
                     if not attrib:
                         continue
                     items = attrib.split("=", 1)
                     if len(items) > 1:
-                        # "name=value"
-                        # -> 'str(obj.name) == value' must be True
                         key, value = items
                     else:
                         key = items[0]
                         if key[0] == "!":
-                            # "!name"
-                            # 'bool(obj.name)' must be False
                             key = key[1:]
                             value = False
                         else:
-                            # "name"
-                            # -> 'bool(obj.name)' must be True
                             value = True
                     attr_group.append((key, value))
                 self.attribs.append(attr_group)
@@ -254,8 +224,6 @@ class AttributeSelector(Plugin):
                         break
             any = any or match
         if any:
-            # not True because we don't want to FORCE the selection of the
-            # item, only say that it is acceptable
             return None
         return False
 
