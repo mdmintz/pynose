@@ -475,23 +475,6 @@ Options
    Add detail to error output by attempting to evaluate failed asserts
    [NOSE_DETAILED_ERRORS]
 
---with-profile
-
-   Enable plugin Profile: Use this plugin to run tests using the
-   hotshot profiler. [NOSE_WITH_PROFILE]
-
---profile-sort=SORT
-
-   Set sort order for profiler output
-
---profile-stats-file=FILE
-
-   Profiler stats file; default is a new temp file on each run
-
---profile-restrict=RESTRICT
-
-   Restrict profiler output. See help for pstats.Stats for details
-
 --no-skip
 
    Disable special handling of SkipTest exceptions.
