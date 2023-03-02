@@ -21,9 +21,8 @@ op_abspath = os.path.abspath
 
 
 class Selector(object):
-    """Core test selector. Examines test candidates and determines whether,
-    given the specified configuration, the test candidate should be selected
-    as a test."""
+    """Core test selector. Examines test candidates and determines if
+    the test candidate should be selected as a test, given the config."""
     def __init__(self, config):
         if config is None:
             config = Config()
@@ -100,12 +99,12 @@ class Selector(object):
             )
         else:
             wanted = (self.matches(tail)
-                      or (self.config.srcDirs
-                          and tail in self.config.srcDirs))
+                      or (self.config.srcDirs and tail in self.config.srcDirs))
         plug_wants = self.plugins.wantDirectory(dirname)
         if plug_wants is not None:
-            log.debug("Plugin setting selection of %s to %s",
-                      dirname, plug_wants)
+            log.debug(
+                "Plugin setting selection of %s to %s", dirname, plug_wants
+            )
             wanted = plug_wants
         log.debug("wantDirectory %s? %s", dirname, wanted)
         return wanted
@@ -188,8 +187,10 @@ class Selector(object):
         if declared is not None:
             wanted = declared
         else:
-            wanted = self.matches(module.__name__.split('.')[-1]) \
-                     or module.__name__ == '__main__'
+            wanted = (
+                self.matches(module.__name__.split('.')[-1])
+                or module.__name__ == '__main__'
+            )
         plug_wants = self.plugins.wantModule(module)
         if plug_wants is not None:
             wanted = plug_wants
@@ -201,23 +202,21 @@ defaultSelector = Selector
 
 
 class TestAddress(object):
-    """A test address represents a user's request to run a particular
-    test. The user may specify a filename or module (or neither),
-    and/or a callable (a class, function, or method). The naming
-    format for test addresses is:
+    """A test address represents a user's request to run a particular test.
+    The user may specify a filename or module (or neither),
+    and/or a callable (a class, function, or method).
+    The naming format for test addresses is:
 
     filename_or_module:callable
 
     Filenames that are not absolute will be made absolute relative to
     the working dir.
-
     The filename or module part will be considered a module name if it
     doesn't look like a file, that is, if it doesn't exist on the file
     system and it doesn't contain any directory separators and it
     doesn't end in .py.
-
-    Callables may be a class name, function name, method name, or
-    class.method specification."""
+    Callables may be a class name, function name, method name,
+    or class.method specification."""
     def __init__(self, name, workingDir=None):
         if workingDir is None:
             workingDir = os.getcwd()
@@ -232,8 +231,7 @@ class TestAddress(object):
         if self.filename:
             self.filename = src(self.filename)
             if not op_isabs(self.filename):
-                self.filename = op_abspath(op_join(workingDir,
-                                                   self.filename))
+                self.filename = op_abspath(op_join(workingDir, self.filename))
             if self.module is None:
                 self.module = getpackage(self.filename)
         log.debug(

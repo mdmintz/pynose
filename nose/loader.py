@@ -188,8 +188,9 @@ class TestLoader(unittest.TestLoader):
                 return self.suiteClass(tests)
             else:
                 open(filename, 'r').close()
-                raise ValueError("Unable to load tests from file %s"
-                                 % filename)
+                raise ValueError(
+                    "Unable to load tests from file %s" % filename
+                )
         except (KeyboardInterrupt, SystemExit):
             raise
         except Exception:
@@ -348,8 +349,7 @@ class TestLoader(unittest.TestLoader):
                     return self.loadTestsFromName(addr.call, module)
                 else:
                     return self.loadTestsFromModule(
-                        module, addr.filename,
-                        discovered=discovered)
+                        module, addr.filename, discovered=discovered)
             elif addr.filename:
                 path = addr.filename
                 if addr.call:
@@ -406,8 +406,7 @@ class TestLoader(unittest.TestLoader):
         return self.suiteClass(cases)
 
     def loadTestsFromTestClass(self, cls):
-        """Load tests from a test class that is *not* a unittest.TestCase
-        subclass."""
+        """Load tests from a class that is NOT a unittest.TestCase subclass."""
         def wanted(attr, cls=cls, sel=self.selector):
             item = getattr(cls, attr, None)
             if isfunction(item):
@@ -437,8 +436,7 @@ class TestLoader(unittest.TestLoader):
             return Failure(exc[0], exc[1], exc[2], address=addr)
 
     def _makeTest(self, obj, parent=None):
-        """Given a test object and its parent, return a test case
-        or test suite."""
+        """Given a test object and its parent, return a test case or suite."""
         plug_tests = []
         try:
             addr = test_address(obj)
@@ -489,9 +487,9 @@ class TestLoader(unittest.TestLoader):
             else:
                 return FunctionTestCase(obj)
         else:
-            return Failure(TypeError,
-                           "Can't make a test from %s" % obj,
-                           address=addr)
+            return Failure(
+                TypeError, "Can't make a test from %s" % obj, address=addr
+            )
 
     def resolve(self, name, module):
         """Resolve name within module."""

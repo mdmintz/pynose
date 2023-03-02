@@ -29,12 +29,7 @@ an ErrorClass plugin.
 Let's see the plugin in action. First some boilerplate.
     >>> import sys
     >>> import unittest
-    >>> try:
-    ...     # 2.7+
-    ...     from unittest.runner import _WritelnDecorator
-    ... except ImportError:
-    ...     from unittest import _WritelnDecorator
-    ...
+    >>> from unittest.runner import _WritelnDecorator
     >>> buf = _WritelnDecorator(sys.stdout)
 Now define a test case that raises a Todo.
     >>> class TestTodo(unittest.TestCase):
@@ -101,8 +96,9 @@ class ErrorClass(object):
             for key in ('label', 'isfailure'):
                 setattr(self, key, kw.pop(key))
         except KeyError:
-            raise TypeError("%r is a required named argument for ErrorClass"
-                            % key)
+            raise TypeError(
+                "%r is a required named argument for ErrorClass" % key
+            )
 
     def __iter__(self):
         return iter(self.errorClasses)

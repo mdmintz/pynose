@@ -3,26 +3,26 @@ After you've run once to generate test ids, you can re-run individual
 tests by activating the plugin and passing the ids (with or
 without the # prefix) instead of test names.
 
-For example, if your normal test run looks like::
+For example, if your normal test run looks like:
 
   % nosetests -v
   tests.test_a ... ok
   tests.test_b ... ok
   tests.test_c ... ok
 
-When adding ``--with-id`` you'll see::
+When adding ``--with-id`` you'll see:
 
   % nosetests -v --with-id
   #1 tests.test_a ... ok
   #2 tests.test_b ... ok
   #3 tests.test_c ... ok
 
-Then you can re-run individual tests by supplying just an id number::
+Then you can re-run individual tests by supplying just an id number:
 
   % nosetests -v --with-id 2
   #2 tests.test_b ... ok
 
-You can also pass multiple id numbers::
+You can also pass multiple id numbers:
 
   % nosetests -v --with-id 2 3
   #2 tests.test_b ... ok
@@ -39,7 +39,7 @@ Looping over failed tests
 
 This plugin also adds a mode that will direct the test runner to record
 failed tests. Subsequent test runs will then run only the tests that failed
-last time. Activate this mode with the ``--failed`` switch::
+last time. Activate this mode with the ``--failed`` switch:
 
  % nosetests -v --failed
  #1 test.test_a ... ok
@@ -47,7 +47,7 @@ last time. Activate this mode with the ``--failed`` switch::
  #3 test.test_c ... FAILED
  #4 test.test_d ... ok
 
-On the second run, only tests #2 and #3 will run::
+On the second run, only tests #2 and #3 will run:
 
  % nosetests -v --failed
  #2 test.test_b ... ERROR
@@ -55,25 +55,25 @@ On the second run, only tests #2 and #3 will run::
 
 As you correct errors and tests pass, they'll drop out of subsequent runs.
 
-First::
+First:
 
  % nosetests -v --failed
  #2 test.test_b ... ok
  #3 test.test_c ... FAILED
 
-Second::
+Second:
 
  % nosetests -v --failed
  #3 test.test_c ... FAILED
 
 When all tests pass, the full set will run on the next invocation.
 
-First::
+First:
 
  % nosetests -v --failed
  #3 test.test_c ... ok
 
-Second::
+Second:
 
  % nosetests -v --failed
  #1 test.test_a ... ok
@@ -81,7 +81,7 @@ Second::
  #3 test.test_c ... ok
  #4 test.test_d ... ok
 
-.. note ::
+.. note:
 
   If you expect to use ``--failed`` regularly, it's a good idea to always run
   using the ``--with-id`` option. This will ensure that an id file is always
@@ -111,15 +111,17 @@ class TestId(Plugin):
     def options(self, parser, env):
         """Register commandline options."""
         Plugin.options(self, parser, env)
-        parser.add_option('--id-file', action='store', dest='testIdFile',
-                          default='.noseids', metavar="FILE",
-                          help="Store test ids found in test runs in this "
-                          "file. Default is the file .noseids in the "
-                          "working directory.")
-        parser.add_option('--failed', action='store_true',
-                          dest='failed', default=False,
-                          help="Run the tests that failed in the last "
-                          "test run.")
+        parser.add_option(
+            '--id-file', action='store', dest='testIdFile',
+            default='.noseids', metavar="FILE",
+            help="Store test ids found in test runs in this "
+            "file. Default is the file .noseids in the "
+            "working directory."
+        )
+        parser.add_option(
+            '--failed', action='store_true', dest='failed', default=False,
+            help="Run the tests that failed in the last test run."
+        )
 
     def configure(self, options, conf):
         """Configure plugin."""
@@ -185,9 +187,6 @@ class TestId(Plugin):
                 self.idfile)
             fh.close()
         except ValueError as e:
-            # load() may throw a ValueError when reading the ids file
-            # if it was generated with a newer version of Python
-            # than we are currently running.
             log.debug('Error loading %s : %s', self.idfile, str(e))
         except IOError:
             log.debug('IO error reading %s', self.idfile)
@@ -207,22 +206,22 @@ class TestId(Plugin):
                 translated.append(trans)
             else:
                 new_source.append(name)
-        # names that are not ids and that are not in the current
-        # list of source names go into the list for next time
+        # Names that are not ids and that are not in the current
+        # list of source names go into the list for next time.
         if new_source:
             new_set = set(new_source)
             old_set = set(self.source_names)
             log.debug("old: %s new: %s", old_set, new_set)
             really_new = [s for s in new_source if s not in old_set]
             if really_new:
-                # remember new sources
+                # Remember new sources.
                 self.source_names.extend(really_new)
             if not translated:
-                # new set of source names, no translations
-                # means "run the requested tests"
+                # New set of source names.
+                # No translations means "run the requested tests".
                 names = new_source
         else:
-            # no new names to translate and add to id set
+            # No new names to translate and add to id set.
             self.collecting = False
         log.debug("translated: %s new sources %s names %s",
                   translated, really_new, names)
@@ -262,12 +261,12 @@ class TestId(Plugin):
         self.id += 1
 
     def afterTest(self, test):
-        # None means test never ran, False means failed/err
+        # None means test never ran, False means failed/err.
         if test.passed is False:
             try:
                 key = str(self.tests[test.address()])
             except KeyError:
-                # never saw this test -- startTest didn't run
+                # Never saw this test -- startTest didn't run.
                 pass
             else:
                 if key not in self.failed:
@@ -281,7 +280,7 @@ class TestId(Plugin):
             return name
         log.debug("Got key %s", key)
         # I'm running tests mapped from the ids file,
-        # not collecting new ones
+        # not collecting new ones.
         if key in self.ids:
             return self.makeName(self.ids[key])
         return name

@@ -21,18 +21,18 @@ class TextTestRunner(unittest.TextTestRunner):
     """Test runner that uses nose's TextTestResult to enable errorClasses,
     as well as providing hooks for plugins to override or replace the test
     output stream, results, and the test case itself."""
-    def __init__(self, stream=sys.stderr, descriptions=1, verbosity=1,
-                 config=None):
+    def __init__(
+        self, stream=sys.stderr, descriptions=1, verbosity=1, config=None
+    ):
         if config is None:
             config = Config()
         self.config = config
         unittest.TextTestRunner.__init__(self, stream, descriptions, verbosity)
 
     def _makeResult(self):
-        return TextTestResult(self.stream,
-                              self.descriptions,
-                              self.verbosity,
-                              self.config)
+        return TextTestResult(
+            self.stream, self.descriptions, self.verbosity, self.config
+        )
 
     def run(self, test):
         """Overrides to provide plugin hooks and defer all output to
@@ -117,8 +117,7 @@ class TestProgram(unittest.TestProgram):
             manager = PluginManager(plugins=plugins)
         else:
             manager = DefaultPluginManager()
-        return Config(
-            env=env, files=cfg_files, plugins=manager)
+        return Config(env=env, files=cfg_files, plugins=manager)
 
     def parseArgs(self, argv):
         """Parse argv and env and configure running environment."""
@@ -280,8 +279,7 @@ def collector():
                            'prepareTestLoader', 'prepareTestRunner',
                            'setOutputStream')
     plugins = RestrictedPluginManager(exclude=setuptools_incompat)
-    conf = Config(files=all_config_files(),
-                  plugins=plugins)
+    conf = Config(files=all_config_files(), plugins=plugins)
     conf.configure(argv=['collector'])
     loader = defaultTestLoader(conf)
     if conf.testNames:

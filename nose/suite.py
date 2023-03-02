@@ -14,13 +14,8 @@ from nose.util import isclass, resolve_name, try_run
 import collections
 
 if sys.platform == 'cli':
-    if sys.version_info[:2] < (2, 6):
-        import clr
-        clr.AddReference("IronPython")
-        from IronPython.Runtime.Exceptions import StringException
-    else:
-        class StringException(Exception):
-            pass
+    class StringException(Exception):
+        pass
 log = logging.getLogger(__name__)
 _def = object()
 
@@ -327,9 +322,9 @@ class ContextSuite(LazySuite):
             if isinstance(test, Test) or isinstance(test, unittest.TestSuite):
                 yield test
             else:
-                yield Test(test,
-                           config=self.config,
-                           resultProxy=self.resultProxy)
+                yield Test(
+                    test, config=self.config, resultProxy=self.resultProxy
+                )
 
     _tests = property(_get_wrapped_tests, LazySuite._set_tests, None,
                       "Access the tests in this suite. Tests are returned "

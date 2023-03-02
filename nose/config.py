@@ -10,17 +10,15 @@ from nose.plugins.manager import NoPlugins
 from warnings import warn, filterwarnings
 
 log = logging.getLogger(__name__)
-option_blacklist = ['help', 'verbose']  # not allowed in config files
+option_blacklist = ['help', 'verbose']  # Not allowed in config files
 config_files = [
-    # Linux users will prefer this
-    "~/.noserc",
-    # Windows users will prefer this
-    "~/nose.cfg"
+    "~/.noserc",  # Linux users will prefer this
+    "~/nose.cfg",  # Windows users will prefer this
 ]
 exe_allowed_platforms = ('win32', 'cli')
-
-filterwarnings("always", category=DeprecationWarning,
-               module=r'(.*\.)?nose\.config')
+filterwarnings(
+    "always", category=DeprecationWarning, module=r'(.*\.)?nose\.config'
+)
 
 
 class NoSuchOptionError(Exception):
@@ -59,8 +57,9 @@ class ConfiguredDefaultsOptionParser(object):
             try:
                 cfg.read(filename)
             except configparser.Error as exc:
-                raise ConfigError("Error reading config file %r: %s" %
-                                  (filename, str(exc)))
+                raise ConfigError(
+                    "Error reading config file %r: %s" % (filename, str(exc))
+                )
             config.extend(self._configTuples(cfg, filename))
         return config
 
@@ -133,45 +132,44 @@ class ConfiguredDefaultsOptionParser(object):
 
 class Config(object):
     r"""nose configuration.
-    Instances of Config are used throughout nose to configure
-    behavior, including plugin lists. Here are the default values for
-    all config keys:
-      self.env = env = kw.pop('env', {})
-      self.args = ()
-      self.testMatch = re.compile(r'(?:^|[\\b_\\.%s-])[Tt]est' % os.sep)
-      self.addPaths = not env.get('NOSE_NOPATH', False)
-      self.configSection = 'nosetests'
-      self.debug = env.get('NOSE_DEBUG')
-      self.debugLog = env.get('NOSE_DEBUG_LOG')
-      self.exclude = None
-      self.getTestCaseNamesCompat = False
-      self.includeExe = env.get('NOSE_INCLUDE_EXE',
-                                sys.platform in exe_allowed_platforms)
-      self.ignoreFiles = (re.compile(r'^\.'),
-                          re.compile(r'^_'),
-                          re.compile(r'^setup\.py$')
-                          )
-      self.include = None
-      self.loggingConfig = None
-      self.logStream = sys.stderr
-      self.options = NoOptions()
-      self.parser = None
-      self.plugins = NoPlugins()
-      self.srcDirs = ('lib', 'src')
-      self.runOnInit = True
-      self.stopOnError = env.get('NOSE_STOP', False)
-      self.stream = sys.stderr
-      self.testNames = ()
-      self.verbosity = int(env.get('NOSE_VERBOSE', 1))
-      self.where = ()
-      self.py3where = ()
-      self.workingDir = None """
-
+    Instances of Config are used throughout nose to configure behavior,
+    including plugin lists. * Here are the default values for all config keys:
+        self.env = env = kw.pop('env', {})
+        self.args = ()
+        self.testMatch = re.compile(r'(?:^|[\\b_\\.%s-])[Tt]est' % os.sep)
+        self.addPaths = not env.get('NOSE_NOPATH', False)
+        self.configSection = 'nosetests'
+        self.debug = env.get('NOSE_DEBUG')
+        self.debugLog = env.get('NOSE_DEBUG_LOG')
+        self.exclude = None
+        self.getTestCaseNamesCompat = False
+        self.includeExe = env.get(
+            'NOSE_INCLUDE_EXE', sys.platform in exe_allowed_platforms
+        )
+        self.ignoreFiles = (
+            re.compile(r'^\.'), re.compile(r'^_'), re.compile(r'^setup\.py$')
+        )
+        self.include = None
+        self.loggingConfig = None
+        self.logStream = sys.stderr
+        self.options = NoOptions()
+        self.parser = None
+        self.plugins = NoPlugins()
+        self.srcDirs = ('lib', 'src')
+        self.runOnInit = True
+        self.stopOnError = env.get('NOSE_STOP', False)
+        self.stream = sys.stderr
+        self.testNames = ()
+        self.verbosity = int(env.get('NOSE_VERBOSE', 1))
+        self.where = ()
+        self.py3where = ()
+        self.workingDir = None """
     def __init__(self, **kw):
         self.env = env = kw.pop('env', {})
         self.args = ()
-        self.testMatchPat = env.get('NOSE_TESTMATCH',
-                                    r'(?:^|[\b_\.%s-])[Tt]est' % os.sep)
+        self.testMatchPat = env.get(
+            'NOSE_TESTMATCH', r'(?:^|[\b_\.%s-])[Tt]est' % os.sep
+        )
         self.testMatch = re.compile(self.testMatchPat)
         self.addPaths = not env.get('NOSE_NOPATH', False)
         self.configSection = 'nosetests'
@@ -179,12 +177,10 @@ class Config(object):
         self.debugLog = env.get('NOSE_DEBUG_LOG')
         self.exclude = None
         self.getTestCaseNamesCompat = False
-        self.includeExe = env.get('NOSE_INCLUDE_EXE',
-                                  sys.platform in exe_allowed_platforms)
-        self.ignoreFilesDefaultStrings = [r'^\.',
-                                          r'^_',
-                                          r'^setup\.py$',
-                                          ]
+        self.includeExe = env.get(
+            'NOSE_INCLUDE_EXE', sys.platform in exe_allowed_platforms
+        )
+        self.ignoreFilesDefaultStrings = [r'^\.', r'^_', r'^setup\.py$']
         self.ignoreFiles = list(
             map(re.compile, self.ignoreFilesDefaultStrings)
         )
@@ -233,13 +229,11 @@ class Config(object):
 
     def __repr__(self):
         d = self.__dict__.copy()
-        # don't expose env, could include sensitive info
+        # Don't expose env. That could include sensitive info.
         d['env'] = {}
         keys = [k for k in list(d.keys()) if not k.startswith('_')]
         keys.sort()
-        return "Config(%s)" % ', '.join(
-            ['%s=%r' % (k, d[k]) for k in keys]
-        )
+        return "Config(%s)" % ', '.join(['%s=%r' % (k, d[k]) for k in keys])
     __str__ = __repr__
 
     def _parseArgs(self, argv, cfg_files):
@@ -269,8 +263,7 @@ class Config(object):
             argv = sys.argv
         cfg_files = getattr(self, 'files', [])
         options, args = self._parseArgs(argv, cfg_files)
-        # If -c --config has been specified on command line,
-        # load those config files and reparse
+        # If -c --config has been specified, then load those configs & reparse.
         if getattr(options, 'files', []):
             options, args = self._parseArgs(argv, options.files)
         self.options = options
@@ -279,8 +272,7 @@ class Config(object):
         if options.testNames is not None:
             self.testNames.extend(tolist(options.testNames))
         if options.py3where is not None:
-            if sys.version_info >= (3,):
-                options.where = options.py3where
+            options.where = options.py3where
         if not options.where:
             options.where = env.get('NOSE_WHERE', None)
         if not options.ignoreFiles:
@@ -346,13 +338,17 @@ class Config(object):
         if self.debugLog:
             debugLogAbsPath = os.path.abspath(self.debugLog)
             for h in logger.handlers:
-                if type(h) == logging.FileHandler and \
-                        h.baseFilename == debugLogAbsPath:
+                if (
+                    type(h) == logging.FileHandler
+                    and h.baseFilename == debugLogAbsPath
+                ):
                     found = True
         else:
             for h in logger.handlers:
-                if type(h) == logging.StreamHandler and \
-                        h.stream == self.logStream:
+                if (
+                    type(h) == logging.StreamHandler
+                    and h.stream == self.logStream
+                ):
                     found = True
         if not found:
             logger.addHandler(handler)
@@ -427,31 +423,27 @@ class Config(object):
             "higher verbosity for greater detail"
         )
         parser.add_option(
-            "-v", "--verbose",
-            action="count", dest="verbosity",
-            default=self.verbosity,
+            "-v", "--verbose", action="count",
+            dest="verbosity", default=self.verbosity,
             help="Be more verbose. [NOSE_VERBOSE]"
         )
         parser.add_option(
             "--verbosity", action="store", dest="verbosity",
-            metavar='VERBOSITY',
-            type="int", help="Set verbosity; --verbosity=2 is "
-            "the same as -v"
+            metavar='VERBOSITY', type="int",
+            help="Set verbosity; --verbosity=2 is the same as -v"
         )
         parser.add_option(
             "-q", "--quiet", action="store_const", const=0, dest="verbosity",
             help="Be less verbose"
         )
         parser.add_option(
-            "-c", "--config", action="append", dest="files",
-            metavar="FILES",
+            "-c", "--config", action="append", dest="files", metavar="FILES",
             help="Load configuration from config file(s). May be specified "
             "multiple times; in that case, all config files will be "
             "loaded and combined"
         )
         parser.add_option(
-            "-w", "--where", action="append", dest="where",
-            metavar="WHERE",
+            "-w", "--where", action="append", dest="where", metavar="WHERE",
             help="Look for tests in this directory. "
             "May be specified multiple times. The first directory passed "
             "will be used as the working directory, in place of the current "
@@ -459,8 +451,7 @@ class Config(object):
             "to the list of tests to execute. [NOSE_WHERE]"
         )
         parser.add_option(
-            "--py3where", action="append", dest="py3where",
-            metavar="PY3WHERE",
+            "--py3where", action="append", dest="py3where", metavar="PY3WHERE",
             help="Look for tests in this directory under Python 3.x. "
             "Functions the same as 'where', but only applies if running under "
             "Python 3.x or above.  Note that, if present under 3.x, this "
@@ -485,8 +476,7 @@ class Config(object):
             "switch."
         )
         parser.add_option(
-            "-l", "--debug", action="store",
-            dest="debug", default=self.debug,
+            "-l", "--debug", action="store", dest="debug", default=self.debug,
             help="Activate debug logging for one or more systems. "
             "Available debug loggers: nose, nose.importer, "
             "nose.inspector, nose.plugins, nose.result and "
@@ -498,9 +488,8 @@ class Config(object):
             "(default: sys.stderr)"
         )
         parser.add_option(
-            "--logging-config", "--log-config",
-            dest="loggingConfig", action="store",
-            default=self.loggingConfig, metavar="FILE",
+            "--logging-config", "--log-config", dest="loggingConfig",
+            action="store", default=self.loggingConfig, metavar="FILE",
             help="Load logging config from this file -- bypasses all other"
             " logging config settings."
         )
@@ -508,8 +497,7 @@ class Config(object):
             "-I", "--ignore-files", action="append", dest="ignoreFiles",
             metavar="REGEX",
             help="Completely ignore any file that matches this regular "
-            "expression. Takes precedence over any other settings or "
-            "plugins. "
+            "expression. Takes precedence over any other settings or plugins. "
             "Specifying this option will replace the default setting. "
             "Specify this option multiple times "
             "to add more regular expressions [NOSE_IGNORE_FILES]"
@@ -536,8 +524,7 @@ class Config(object):
         )
         parser.add_option(
             "-P", "--no-path-adjustment", action="store_false",
-            dest="addPaths",
-            default=self.addPaths,
+            dest="addPaths", default=self.addPaths,
             help="Don't make any changes to sys.path when "
             "loading tests [NOSE_NOPATH]"
         )
@@ -572,10 +559,8 @@ class Config(object):
             help="Prevent nose from byte-compiling the source into .pyc files "
             "while nose is scanning for and running tests."
         )
-
         self.plugins.loadPlugins()
         self.pluginOpts(parser)
-
         self.parser = parser
         return parser
 
@@ -627,9 +612,8 @@ def all_config_files():
     return user
 
 
-# used when parsing config files
 def flag(val):
-    """Does the value look like an on/off flag?"""
+    """For parsing config files. Does the value look like an on/off flag?"""
     if val == 1:
         return True
     elif val == 0:

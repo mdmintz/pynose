@@ -3,48 +3,31 @@ environment variable to enable collection and execution of :mod:`doctests
 <doctest>`.  Because doctests are usually included in the tested package
 (instead of being grouped into packages or modules of their own), nose only
 looks for them in the non-test packages it discovers in the working directory.
-
 Doctests may also be placed into files other than python modules, in which
 case they can be collected and executed by using the ``--doctest-extension``
 switch or NOSE_DOCTEST_EXTENSION environment variable to indicate which file
 extension(s) to load.
-
 When loading doctests from non-module files, use the ``--doctest-fixtures``
 switch to specify how to find modules containing fixtures for the tests. A
 module name will be produced by appending the value of that switch to the base
 name of each doctest file loaded. For example, a doctest file "widgets.rst"
 with the switch ``--doctest_fixtures=_fixt`` will load fixtures from the module
 ``widgets_fixt.py``.
-
 A fixtures module may define any or all of the following functions:
-
-* setup([module]) or setup_module([module])
-
-  Called before the test runs. You may raise SkipTest to skip all tests.
-
-* teardown([module]) or teardown_module([module])
-
-  Called after the test runs, if setup/setup_module did not raise an
-  unhandled exception.
-
-* setup_test(test)
-
-  Called before the test. NOTE: the argument passed is a
-  doctest.DocTest instance, *not* a unittest.TestCase.
-
-* teardown_test(test)
-
-  Called after the test, if setup_test did not raise an exception. NOTE: the
-  argument passed is a doctest.DocTest instance, *not* a unittest.TestCase.
-
-Doctests are run like any other test, with the exception that output
-capture does not work; doctest does its own output capture while running a
-test.
-
-.. note ::
-
-   See :doc:`../doc_tests/test_doctest_fixtures/doctest_fixtures` for
-   additional documentation and examples."""
+  * setup([module]) or setup_module([module])
+    Called before the test runs. You may raise SkipTest to skip all tests.
+  * teardown([module]) or teardown_module([module])
+    Called after the test runs, if setup/setup_module did not raise an
+    unhandled exception.
+  * setup_test(test)
+    Called before the test. NOTE: the argument passed is a
+    doctest.DocTest instance, *not* a unittest.TestCase.
+  * teardown_test(test)
+    Called after the test, if setup_test did not raise an exception. NOTE: the
+    argument passed is a doctest.DocTest instance, *not* a unittest.TestCase.
+Doctests are run like any other test, with the exception that output capture
+does not work; doctest does its own output capture while running a test."""
+import doctest
 import logging
 import os
 import sys
@@ -57,19 +40,7 @@ from nose.util import src, tolist, isproperty
 import builtins as builtin_mod
 
 log = logging.getLogger(__name__)
-
-try:
-    import doctest
-    doctest.DocTestCase
-    # system version of doctest is acceptable, but needs a monkeypatch
-except (ImportError, AttributeError):
-    # system version is too old
-    import nose.ext.dtcompat as doctest
-
-# Doctest and coverage don't get along, so we need to create
-# a monkeypatch that will replace the part of doctest that
-# interferes with coverage reports.
-_orp = doctest._OutputRedirectingPdb
+_orp = doctest._OutputRedirectingPdb  # Doctest/coverage report monkeypatch
 
 
 class NoseOutputRedirectingPdb(_orp):
@@ -96,7 +67,6 @@ class DoctestSuite(unittest.TestSuite):
     since they may be attached to objects that are not individually
     addressable (like properties). This suite subclass is used when
     loading doctests from a module to ensure that behavior.
-
     This class is used only if the plugin is not fully prepared;
     in normal use, the loader's suiteClass is used."""
     can_split = False
@@ -124,41 +94,34 @@ class Doctest(Plugin):
     def options(self, parser, env):
         """Register commmandline options."""
         Plugin.options(self, parser, env)
-        parser.add_option('--doctest-tests', action='store_true',
-                          dest='doctest_tests',
-                          default=env.get('NOSE_DOCTEST_TESTS'),
-                          help="Also look for doctests in test modules. "
-                          "Note that classes, methods and functions should "
-                          "have either doctests or non-doctest tests, "
-                          "not both. [NOSE_DOCTEST_TESTS]")
-        parser.add_option('--doctest-extension', action="append",
-                          dest="doctestExtension",
-                          metavar="EXT",
-                          help="Also look for doctests in files with "
-                          "this extension [NOSE_DOCTEST_EXTENSION]")
-        parser.add_option('--doctest-result-variable',
-                          dest='doctest_result_var',
-                          default=env.get('NOSE_DOCTEST_RESULT_VAR'),
-                          metavar="VAR",
-                          help="Change the variable name set to the result of "
-                          "the last interpreter command from the default '_'. "
-                          "Can be used to avoid conflicts with the _() "
-                          "function used for text translation. "
-                          "[NOSE_DOCTEST_RESULT_VAR]")
-        parser.add_option('--doctest-fixtures', action="store",
-                          dest="doctestFixtures",
-                          metavar="SUFFIX",
-                          help="Find fixtures for a doctest file in module "
-                          "with this name appended to the base name "
-                          "of the doctest file")
-        parser.add_option('--doctest-options', action="append",
-                          dest="doctestOptions",
-                          metavar="OPTIONS",
-                          help="Specify options to pass to doctest. " +
-                          "Eg. '+ELLIPSIS,+NORMALIZE_WHITESPACE'")
-        # Set the default as a list, if given in env; otherwise
-        # an additional value set on the command line will cause
-        # an error.
+        parser.add_option(
+            '--doctest-tests', action='store_true', dest='doctest_tests',
+            default=env.get('NOSE_DOCTEST_TESTS'),
+            help="Also look for doctests in test modules. "
+            "Note that classes, methods and functions should have either "
+            "doctests or non-doctest tests, not both. [NOSE_DOCTEST_TESTS]")
+        parser.add_option(
+            '--doctest-extension', action="append",
+            dest="doctestExtension", metavar="EXT",
+            help="Also look for doctests in files with "
+            "this extension [NOSE_DOCTEST_EXTENSION]")
+        parser.add_option(
+            '--doctest-result-variable', dest='doctest_result_var',
+            default=env.get('NOSE_DOCTEST_RESULT_VAR'), metavar="VAR",
+            help="Change the variable name set to the result of "
+            "the last interpreter command from the default '_'. "
+            "Can be used to avoid conflicts with the _() "
+            "function used for text translation. [NOSE_DOCTEST_RESULT_VAR]")
+        parser.add_option(
+            '--doctest-fixtures', action="store",
+            dest="doctestFixtures", metavar="SUFFIX",
+            help="Find fixtures for a doctest file in module "
+            "with this name appended to the base name of the doctest file")
+        parser.add_option(
+            '--doctest-options', action="append",
+            dest="doctestOptions", metavar="OPTIONS",
+            help="Specify options to pass to doctest. "
+            "Eg. '+ELLIPSIS,+NORMALIZE_WHITESPACE'")
         env_setting = env.get('NOSE_DOCTEST_EXTENSION')
         if env_setting is not None:
             parser.set_defaults(doctestExtension=tolist(env_setting))
@@ -178,12 +141,14 @@ class Doctest(Plugin):
                 if not flag or flag[0] not in '+-':
                     raise ValueError(
                         "Must specify doctest options with starting " +
-                        "'+' or '-'.  Got %s" % (flag,))
+                        "'+' or '-'.  Got %s" % (flag,)
+                    )
                 mode, option_name = flag[0], flag[1:]
                 option_flag = doctest.OPTIONFLAGS_BY_NAME.get(option_name)
                 if not option_flag:
-                    raise ValueError("Unknown doctest option %s" %
-                                     (option_name,))
+                    raise ValueError(
+                        "Unknown doctest option %s" % (option_name,)
+                    )
                 if mode == '+':
                     self.optionflags |= option_flag
                 elif mode == '-':
@@ -233,7 +198,6 @@ class Doctest(Plugin):
                 doc = dh.read()
             finally:
                 dh.close()
-
             fixture_context = None
             globs = {'__file__': filename}
             if self.fixtures:

@@ -15,17 +15,18 @@ class Deprecated(ErrorClassPlugin):
     """Installs a DEPRECATED error class for the DeprecatedTest exception.
     Enabled by default."""
     enabled = True
-    deprecated = ErrorClass(DeprecatedTest,
-                            label='DEPRECATED',
-                            isfailure=False)
+    deprecated = ErrorClass(
+        DeprecatedTest, label='DEPRECATED', isfailure=False
+    )
 
     def options(self, parser, env):
         """Register commandline options."""
         env_opt = 'NOSE_WITHOUT_DEPRECATED'
-        parser.add_option('--no-deprecated', action='store_true',
-                          dest='noDeprecated', default=env.get(env_opt, False),
-                          help="Disable special handling of DeprecatedTest "
-                          "exceptions.")
+        parser.add_option(
+            '--no-deprecated', action='store_true',
+            dest='noDeprecated', default=env.get(env_opt, False),
+            help="Disable special handling of DeprecatedTest exceptions."
+        )
 
     def configure(self, options, conf):
         """Configure plugin."""

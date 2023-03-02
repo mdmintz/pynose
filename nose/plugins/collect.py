@@ -1,11 +1,9 @@
 """This plugin bypasses the actual execution of tests, and instead just
 collects test names. Fixtures are also bypassed.
 Running nosetests with the collection plugin enabled should be very quick.
-
 This plugin is useful in combination with the testid plugin (``--with-id``).
 Run both together to get an indexed list of all tests, which will enable you to
 run individual tests by index number.
-
 This plugin is also useful for counting tests in a test suite,
 and making people watching your demo think all of your tests pass."""
 from nose.plugins.base import Plugin
@@ -24,13 +22,11 @@ class CollectOnly(Plugin):
 
     def options(self, parser, env):
         """Register commandline options."""
-        parser.add_option('--collect-only',
-                          '--co',
-                          action='store_true',
-                          dest=self.enableOpt,
-                          default=env.get('NOSE_COLLECT_ONLY'),
-                          help="Enable collect-only: %s [COLLECT_ONLY]" %
-                          (self.help()))
+        parser.add_option(
+            '--collect-only', '--co', action='store_true',
+            dest=self.enableOpt, default=env.get('NOSE_COLLECT_ONLY'),
+            help="Enable collect-only: %s [COLLECT_ONLY]" % (self.help())
+        )
 
     def prepareTestLoader(self, loader):
         """Install collect-only suite class in TestLoader."""

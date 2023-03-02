@@ -10,7 +10,7 @@ class Pdb(Plugin):
     drop into pdb if it encounters an error or failure, respectively."""
     enabled_for_errors = False
     enabled_for_failures = False
-    score = 5  # run last, among builtins
+    score = 5  # Run last among builtins
 
     def options(self, parser, env):
         """Register commandline options."""
@@ -19,13 +19,11 @@ class Pdb(Plugin):
             default=env.get('NOSE_PDB', False),
             help="Drop into debugger on failures or errors")
         parser.add_option(
-            "--pdb-failures", action="store_true",
-            dest="debugFailures",
+            "--pdb-failures", action="store_true", dest="debugFailures",
             default=env.get('NOSE_PDB_FAILURES', False),
             help="Drop into debugger on failures")
         parser.add_option(
-            "--pdb-errors", action="store_true",
-            dest="debugErrors",
+            "--pdb-errors", action="store_true", dest="debugErrors",
             default=env.get('NOSE_PDB_ERRORS', False),
             help="Drop into debugger on errors")
 

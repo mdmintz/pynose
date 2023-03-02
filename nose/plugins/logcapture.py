@@ -130,8 +130,7 @@ class LogCapture(Plugin):
                  " [NOSE_LOGDATEFMT]")
         parser.add_option(
             "--logging-filter", action="store", dest="logcapture_filters",
-            default=env.get('NOSE_LOGFILTER'),
-            metavar="FILTER",
+            default=env.get('NOSE_LOGFILTER'), metavar="FILTER",
             help="Specify which statements to filter in/out. "
                  "By default, everything is captured. If the output is too"
                  " verbose,\nuse this option to filter out needless output.\n"

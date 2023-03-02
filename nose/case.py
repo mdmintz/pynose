@@ -181,8 +181,9 @@ class FunctionTestCase(TestBase):
     create test cases for test functions."""
     __test__ = False  # do not collect
 
-    def __init__(self, test, setUp=None, tearDown=None, arg=tuple(),
-                 descriptor=None):
+    def __init__(
+        self, test, setUp=None, tearDown=None, arg=tuple(), descriptor=None
+    ):
         """Initialize the MethodTestCase.
         Required argument:
         * test -- the test function to call.

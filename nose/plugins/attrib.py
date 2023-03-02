@@ -133,24 +133,22 @@ class AttributeSelector(Plugin):
 
     def options(self, parser, env):
         """Register command line options"""
-        parser.add_option("-a", "--attr",
-                          dest="attr", action="append",
-                          default=env.get('NOSE_ATTR'),
-                          metavar="ATTR",
-                          help="Run only tests that have attributes "
-                          "specified by ATTR [NOSE_ATTR]")
-        parser.add_option("-A", "--eval-attr",
-                          dest="eval_attr", metavar="EXPR", action="append",
-                          default=env.get('NOSE_EVAL_ATTR'),
-                          help="Run only tests for whose attributes "
-                          "the Python expression EXPR evaluates "
-                          "to True [NOSE_EVAL_ATTR]")
+        parser.add_option(
+            "-a", "--attr", dest="attr", action="append",
+            default=env.get('NOSE_ATTR'), metavar="ATTR",
+            help="Run only tests that have attributes "
+            "specified by ATTR [NOSE_ATTR]"
+        )
+        parser.add_option(
+            "-A", "--eval-attr", dest="eval_attr", metavar="EXPR",
+            action="append", default=env.get('NOSE_EVAL_ATTR'),
+            help="Run only tests for whose attributes the Python "
+            "expression EXPR evaluates to True [NOSE_EVAL_ATTR]"
+        )
 
     def configure(self, options, config):
         """Configure the plugin and system, based on selected options.
-
-        attr and eval_attr may each be lists.
-
+        Both attr and eval_attr may each be lists.
         self.attribs will be a list of lists of tuples.
         In that list, each list is a group of attributes,
         all of which must match for the rule to match."""
@@ -161,8 +159,7 @@ class AttributeSelector(Plugin):
                 def eval_in_context(expr, obj, cls):
                     return eval(expr, None, ContextHelper(obj, cls))
                 self.attribs.append([(attr, eval_in_context)])
-        # attribute requirements are a comma separated list of
-        # 'key=value' pairs
+        # attr requirements are a comma separated list of 'key=value' pairs
         if options.attr:
             std_attr = tolist(options.attr)
             for attr in std_attr:

@@ -1,10 +1,9 @@
 """This plugin provides test results in the standard XUnit XML format.
-
 It's designed for the `Jenkins`_ (previously Hudson) continuous build
 system, but will probably work for anything else that understands an
 XUnit-formatted XML representation of test results.
 
-Add this shell command to your builder ::
+Add this shell command to your builder:
 
     nosetests --with-xunit
 
@@ -12,7 +11,7 @@ And by default a file named nosetests.xml will be written to the
 working directory.
 
 In a Jenkins builder, tick the box named "Publish JUnit test result report"
-under the Post-build Actions and enter this value for Test report XMLs::
+under the Post-build Actions and enter this value for Test report XMLs:
 
     **/nosetests.xml
 
@@ -22,7 +21,7 @@ If you need to change the name or location of the file, you can set the
 If you need to change the name of the test suite, you can set the
 ``--xunit-testsuite-name`` option.
 
-Here is an abbreviated version of what an XML test report might look like::
+Here is an abbreviated version of what an XML test report might look like:
 
     <?xml version="1.0" encoding="UTF-8"?>
     <testsuite name="nosetests" tests="1" errors="1" failures="0" skip="0">
@@ -52,7 +51,6 @@ from nose.pyversion import force_unicode, format_exception
 
 # Invalid XML characters, control characters 0-31 sans \t, \n and \r
 CONTROL_CHARACTERS = re.compile(r"[\000-\010\013\014\016-\037]")
-
 TEST_ID = re.compile(r'^(.*?)(\(.*\))$')
 
 
@@ -100,15 +98,7 @@ def exc_message(exc_info):
         # str exception
         result = exc_info[0]
     else:
-        try:
-            result = str(exc)
-        except UnicodeEncodeError:
-            try:
-                result = str(exc)
-            except UnicodeError:
-                # Fallback to args as neither str nor
-                # unicode(Exception(u'\xe6')) work in Python < 2.6
-                result = exc.args[0]
+        result = str(exc)
     result = force_unicode(result, 'UTF-8')
     return xml_safe(result)
 
@@ -152,9 +142,8 @@ class Xunit(Plugin):
         if hasattr(self, '_timer'):
             taken = time() - self._timer
         else:
-            # test died before it ran (probably error in setup())
-            # or success/failure added before test started probably
-            # due to custom TestResult munging
+            # Test had an error before it ran (probably error in setup())
+            # or success/failure added before test started.
             taken = 0.0
         return taken
 
@@ -189,17 +178,15 @@ class Xunit(Plugin):
         Plugin.configure(self, options, config)
         self.config = config
         if self.enabled:
-            self.stats = {'errors': 0,
-                          'failures': 0,
-                          'passes': 0,
-                          'skipped': 0
-                          }
+            self.stats = {
+                'errors': 0, 'failures': 0, 'passes': 0, 'skipped': 0
+            }
             self.errorlist = []
             self.error_report_file_name = os.path.realpath(options.xunit_file)
             self.xunit_testsuite_name = options.xunit_testsuite_name
 
     def report(self, stream):
-        """Writes an Xunit-formatted XML file
+        """Writes an Xunit-formatted XML file.
         The file includes a report of test errors and failures."""
         self.error_report_file = codecs.open(
             self.error_report_file_name, 'w', self.encoding, 'replace'
@@ -276,17 +263,14 @@ class Xunit(Plugin):
     def addError(self, test, err, capt=None):
         """Add error output to Xunit report."""
         taken = self._timeTaken()
-
         if issubclass(err[0], SkipTest):
             type = 'skipped'
             self.stats['skipped'] += 1
         else:
             type = 'error'
             self.stats['errors'] += 1
-
         tb = format_exception(err, self.encoding)
         id = test.id()
-
         self.errorlist.append(
             '<testcase classname=%(cls)s name=%(name)s time="%(taken).3f">'
             '<%(type)s type=%(errtype)s message=%(message)s><![CDATA[%(tb)s]]>'
@@ -308,7 +292,6 @@ class Xunit(Plugin):
         tb = format_exception(err, self.encoding)
         self.stats['failures'] += 1
         id = test.id()
-
         self.errorlist.append(
             '<testcase classname=%(cls)s name=%(name)s time="%(taken).3f">'
             '<failure type=%(errtype)s message=%(message)s><![CDATA[%(tb)s]]>'

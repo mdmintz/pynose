@@ -21,8 +21,8 @@ try:
     import new
 
     def make_instancemethod(function, instance):
-        return new.instancemethod(function.__func__, instance,
-                                  instance.__class__)
+        return new.instancemethod(
+            function.__func__, instance, instance.__class__)
 except ImportError:
     def make_instancemethod(function, instance):
         return function.__get__(instance, instance.__class__)

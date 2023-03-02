@@ -6,12 +6,6 @@ worker processes that run tests in parallel. This can speed up CPU-bound test
 runs (as long as the number of work processeses is around the number of
 processors or cores available), but is mainly useful for IO-bound tests that
 spend most of their time waiting for data to arrive from someplace else.
-
-   See :doc:`../doc_tests/test_multiprocess/multiprocess` for
-   additional documentation and examples. Use of this plugin on python
-   2.5 or earlier requires the multiprocessing_ module, also available
-   from PyPI.
-
 .. _multiprocessing : http://code.google.com/p/python-multiprocessing/
 
 How tests are distributed
@@ -19,7 +13,6 @@ How tests are distributed
 The ideal case would be to dispatch each test to a worker process
 separately. This ideal is not attainable in all cases, however, because many
 test suites depend on context (class, module or package) fixtures.
-
 The plugin can't know (unless you tell it -- see below!) if a context fixture
 can be called many times concurrently (is re-entrant), or if it can be shared
 among tests running in different processes. Therefore, if a context has
@@ -27,16 +20,14 @@ fixtures, the default behavior is to dispatch the entire suite to a worker as
 a unit.
 
 Controlling distribution
-^^^^^^^^^^^^^^^^^^^^^^^^
+========================
 There are two context-level variables that you can use to control this default
 behavior.
-
-If a context's fixtures are re-entrant, set ``_multiprocess_can_split_ = True``
+* If a context's fixtures are re-entrant, set `_multiprocess_can_split_ = True`
 in the context, and the plugin will dispatch tests in suites bound to that
 context as if the context had no fixtures. This means that the fixtures will
 execute concurrently and multiple times, typically once per test.
-
-If a context's fixtures can be shared by tests running in different processes
+* If a context's fixtures can be shared by tests running in different processes
 -- such as a package-level fixture that starts an external http server or
 initializes a shared database -- then set ``_multiprocess_shared_ = True`` in
 the context. These fixtures will then execute in the primary nose process, and
@@ -84,11 +75,7 @@ from nose.plugins.base import Plugin
 from nose.pyversion import bytes_
 from nose.suite import ContextSuite
 from nose.util import test_address
-try:
-    # 2.7+
-    from unittest.runner import _WritelnDecorator
-except ImportError:
-    from unittest import _WritelnDecorator
+from unittest.runner import _WritelnDecorator
 from queue import Empty
 from warnings import warn
 from io import StringIO
@@ -148,33 +135,30 @@ class MultiProcess(Plugin):
 
     def options(self, parser, env):
         """Register command-line options."""
-        parser.add_option("--processes", action="store",
-                          default=env.get('NOSE_PROCESSES', 0),
-                          dest="multiprocess_workers",
-                          metavar="NUM",
-                          help="Spread test run among this many processes. "
-                          "Set a number equal to the number of processors "
-                          "or cores in your machine for best results. "
-                          "Pass a negative number to have the number of "
-                          "processes automatically set to the number of "
-                          "cores. Passing 0 means to disable parallel "
-                          "testing. Default is 0 unless NOSE_PROCESSES is "
-                          "set. "
-                          "[NOSE_PROCESSES]")
-        parser.add_option("--process-timeout", action="store",
-                          default=env.get('NOSE_PROCESS_TIMEOUT', 10),
-                          dest="multiprocess_timeout",
-                          metavar="SECONDS",
-                          help="Set timeout for return of results from each "
-                          "test runner process. Default is 10. "
-                          "[NOSE_PROCESS_TIMEOUT]")
-        parser.add_option("--process-restartworker", action="store_true",
-                          default=env.get('NOSE_PROCESS_RESTARTWORKER', False),
-                          dest="multiprocess_restartworker",
-                          help="If set, will restart each worker process once"
-                          " their tests are done, this helps control memory "
-                          "leaks from killing the system. "
-                          "[NOSE_PROCESS_RESTARTWORKER]")
+        parser.add_option(
+            "--processes", action="store",
+            default=env.get('NOSE_PROCESSES', 0),
+            dest="multiprocess_workers", metavar="NUM",
+            help="Spread test run among this many processes. "
+            "Set a number equal to the number of processors "
+            "or cores in your machine for best results. "
+            "Pass a negative number to have the number of "
+            "processes automatically set to the number of cores. "
+            "Passing 0 means to disable parallel testing. "
+            "Default is 0 unless NOSE_PROCESSES is set. [NOSE_PROCESSES]")
+        parser.add_option(
+            "--process-timeout", action="store",
+            default=env.get('NOSE_PROCESS_TIMEOUT', 10),
+            dest="multiprocess_timeout", metavar="SECONDS",
+            help="Set timeout for return of results from each "
+            "test runner process. Default is 10. [NOSE_PROCESS_TIMEOUT]")
+        parser.add_option(
+            "--process-restartworker", action="store_true",
+            default=env.get('NOSE_PROCESS_RESTARTWORKER', False),
+            dest="multiprocess_restartworker",
+            help="If set, will restart each worker process once"
+            " their tests are done, this helps control memory "
+            "leaks from killing the system. [NOSE_PROCESS_RESTARTWORKER]")
 
     def configure(self, options, config):
         """Configure plugin."""
@@ -185,9 +169,8 @@ class MultiProcess(Plugin):
         if not hasattr(options, 'multiprocess_workers'):
             self.enabled = False
             return
-        # don't start inside of a worker process
         if config.worker:
-            return
+            return  # Don't start inside of a worker process
         self.config = config
         try:
             workers = int(options.multiprocess_workers)
@@ -199,12 +182,8 @@ class MultiProcess(Plugin):
                 self.enabled = False
                 return
             if workers < 0:
-                try:
-                    import multiprocessing
-                    workers = multiprocessing.cpu_count()
-                except NotImplementedError:
-                    self.enabled = False
-                    return
+                import multiprocessing
+                workers = multiprocessing.cpu_count()
             self.enabled = True
             self.config.multiprocess_workers = workers
             t = float(options.multiprocess_timeout)
@@ -220,10 +199,9 @@ class MultiProcess(Plugin):
 
     def prepareTestRunner(self, runner):
         """Replace test runner with MultiProcessTestRunner."""
-        return MultiProcessTestRunner(stream=runner.stream,
-                                      verbosity=self.config.verbosity,
-                                      config=self.config,
-                                      loaderClass=self.loaderClass)
+        return MultiProcessTestRunner(
+            stream=runner.stream, verbosity=self.config.verbosity,
+            config=self.config, loaderClass=self.loaderClass)
 
 
 def signalhandler(sig, frame):
@@ -276,9 +254,7 @@ class MultiProcessTestRunner(TextTestRunner):
                 test_addr = self.addtask(testQueue, tasks, case)
                 log.debug(
                     "Queued test %s (%s) to %s",
-                    len(tasks),
-                    test_addr,
-                    testQueue,
+                    len(tasks), test_addr, testQueue,
                 )
 
     def startProcess(
@@ -311,8 +287,7 @@ class MultiProcessTestRunner(TextTestRunner):
         return p
 
     def run(self, test):
-        """
-        Execute the test (which may be a test suite). If the test is a suite,
+        """Execute the test (which may be a suite). If the test is a suite,
         distribute it out among as many processes as have been configured, at
         as fine a level as is possible given the context fixtures defined in
         the suite or any sub-suites."""
@@ -348,9 +323,7 @@ class MultiProcessTestRunner(TextTestRunner):
             while tasks:
                 log.debug(
                     "Waiting for results (%s/%s tasks), next timeout=%.3fs",
-                    len(completed),
-                    total_tasks,
-                    nexttimeout,
+                    len(completed), total_tasks, nexttimeout,
                 )
                 try:
                     iworker, addr, newtask_addrs, batch_result = (
@@ -358,9 +331,7 @@ class MultiProcessTestRunner(TextTestRunner):
                     )
                     log.debug(
                         'Results received for worker %d, %s, new tasks: %d',
-                        iworker,
-                        addr,
-                        len(newtask_addrs),
+                        iworker, addr, len(newtask_addrs),
                     )
                     try:
                         try:
@@ -368,8 +339,7 @@ class MultiProcessTestRunner(TextTestRunner):
                         except ValueError:
                             log.warn(
                                 'worker %s failed to remove from tasks: %s',
-                                iworker,
-                                addr,
+                                iworker, addr,
                             )
                         total_tasks += len(newtask_addrs)
                         tasks.extend(newtask_addrs)
@@ -397,7 +367,7 @@ class MultiProcessTestRunner(TextTestRunner):
                                 testQueue,
                                 resultQueue,
                                 shouldStop,
-                                result
+                                result,
                             )
                 except Empty:
                     log.debug("Timed out with %s tasks pending "
@@ -457,7 +427,7 @@ class MultiProcessTestRunner(TextTestRunner):
                                     os.kill(w.pid, signal.SIGILL)
                                     time.sleep(0.1)
                     if not any_alive and testQueue.empty():
-                        log.debug("All workers dead")
+                        log.debug("All workers are dead")
                         break
                 nexttimeout = self.config.multiprocess_timeout
                 for w in workers:
@@ -570,9 +540,10 @@ class MultiProcessTestRunner(TextTestRunner):
         ):
             if isinstance(test, ContextSuite):
                 contained = list(test)
-                if (len(contained) == 1
-                    and getattr(contained[0],
-                                'context', None) == test.context):
+                if (
+                    len(contained) == 1
+                    and getattr(contained[0], 'context', None) == test.context
+                ):
                     test = contained[0]
             yield test
         else:
@@ -657,9 +628,9 @@ def __runner(
 
     def makeResult():
         stream = _WritelnDecorator(StringIO())
-        result = resultClass(stream, descriptions=1,
-                             verbosity=config.verbosity,
-                             config=config)
+        result = resultClass(
+            stream, descriptions=1, verbosity=config.verbosity, config=config
+        )
         plug_result = config.plugins.prepareTestResult(result)
         if plug_result:
             return plug_result
@@ -670,14 +641,16 @@ def __runner(
         errors = [(TestLet(c), err) for c, err in result.errors]
         errorClasses = {}
         for key, (storage, label, isfail) in list(result.errorClasses.items()):
-            errorClasses[key] = ([(TestLet(c), err) for c, err in storage],
-                                 label, isfail)
+            errorClasses[key] = (
+                [(TestLet(c), err) for c, err in storage], label, isfail
+            )
         return (
             result.stream.getvalue(),
             result.testsRun,
             failures,
             errors,
-            errorClasses)
+            errorClasses
+        )
     for test_addr, arg in iter(get, 'STOP'):
         if shouldStop.is_set():
             log.exception('Worker %d STOPPED', ix)
@@ -757,9 +730,9 @@ class NoSharedFixtureContextSuite(ContextSuite):
 
     def run(self, result):
         """Run tests in suite inside of suite fixtures."""
-        # proxy the result for myself
-        log.debug("suite %s (%s) run called, tests: %s",
-                  id(self), self, self._tests)
+        log.debug(
+            "suite %s (%s) run called, tests: %s", id(self), self, self._tests
+        )
         if self.resultProxy:
             result, orig = self.resultProxy(result, self), result
         else:
@@ -775,10 +748,7 @@ class NoSharedFixtureContextSuite(ContextSuite):
             return
         try:
             for test in self._tests:
-                if (
-                    isinstance(test, nose.case.Test)
-                    and self.arg is not None
-                ):
+                if isinstance(test, nose.case.Test) and self.arg is not None:
                     test.test.arg = self.arg
                 else:
                     test.arg = self.arg
@@ -811,7 +781,7 @@ class NoSharedFixtureContextSuite(ContextSuite):
         finally:
             self.has_run = True
             try:
-                # log.debug('tearDown for %s', id(self));
+                # log.debug('tearDown for %s', id(self))
                 self.tearDown()
             except KeyboardInterrupt:
                 raise

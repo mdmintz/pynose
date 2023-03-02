@@ -90,7 +90,7 @@ class PluginProxy(object):
 
         meth = self.method
         if getattr(meth, 'generative', False):
-            # call all plugins and yield a flattened iterator of their results
+            # Call all plugins and yield a flattened iterator of their results.
             return lambda *arg, **kw: list(self.generate(*arg, **kw))
         elif getattr(meth, 'chainable', False):
             return self.chain
@@ -101,8 +101,8 @@ class PluginProxy(object):
         """Call plugins in a chain, where the result of each plugin call is
         sent to next plugin as input. The final output result is returned."""
         result = None
-        # extract the static arguments (if any) from arg so they can
-        # be passed to each plugin call in the chain
+        # Extract the static arguments (if any) from arg so they can
+        # be passed to each plugin call in the chain.
         static = [a for (static, a)
                   in zip(getattr(self.method, 'static_args', []), arg)
                   if static]
@@ -196,8 +196,7 @@ class PluginManager(object):
     overridden by a subclass.
     The basic functionality of a plugin manager is to proxy all unknown
     attributes through a ``PluginProxy`` to a list of plugins.
-    Note that the list of plugins *may not* be changed after the first plugin
-    call."""
+    Note that the plugins *may not* be changed after the first plugin call."""
     proxyClass = PluginProxy
 
     def __init__(self, plugins=(), proxyClass=None):
@@ -221,8 +220,7 @@ class PluginManager(object):
         return iter(self.plugins)
 
     def addPlugin(self, plug):
-        # allow, for instance, plugins loaded via entry points to
-        # supplant builtin plugins.
+        # Allow plugins loaded via entry points to extend builtin plugins.
         new_name = getattr(plug, 'name', object())
         self._plugins[:] = [p for p in self._plugins
                             if getattr(p, 'name', None) != new_name]

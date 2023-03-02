@@ -6,7 +6,6 @@ use of its hooks with some level of confidence. However, there is also
 a mixin for unittest.TestCase called PluginTester that's designed to
 test plugins in their native runtime environment.
 Here's a simple example with a do-nothing plugin and a composed suite:
-
     >>> import unittest
     >>> from nose.plugins import Plugin, PluginTester
     >>> class FooPlugin(Plugin):
@@ -38,10 +37,8 @@ Here's a simple example with a do-nothing plugin and a composed suite:
     True
     >>> res.testsRun
     1
-
 And here is a more complex example of testing a plugin that has extra
 arguments and reads environment variables:
-
     >>> import unittest, os
     >>> from nose.plugins import Plugin, PluginTester
     >>> class FancyOutputter(Plugin):
@@ -93,6 +90,7 @@ arguments and reads environment variables:
 import re
 import sys
 from io import StringIO
+from multiprocessing import Manager
 from os import getpid
 from warnings import warn
 
@@ -100,21 +98,18 @@ __all__ = ['PluginTester', 'run']
 
 
 class MultiProcessFile(object):
-    """helper for testing multiprocessing
-
-    multiprocessing poses a problem for doctests, since the strategy
+    """Helper for testing multiprocessing.
+    Multiprocessing poses a problem for doctests, since the strategy
     of replacing sys.stdout/stderr with file-like objects then
     inspecting the results won't work: the child processes will
     write to the objects, but the data will not be reflected
     in the parent doctest-ing process.
-
     The solution is to create file-like objects which will interact with
     multiprocessing in a more desirable way.
-
     All processes can write to this object, but only the creator can read.
     This allows the testing system to see a unified picture of I/O."""
     def __init__(self):
-        # per advice at:
+        # Per advice at:
         # http://docs.python.org/library/multiprocessing.html#all-platforms
         self.__master = getpid()
         self.__queue = Manager().Queue()
@@ -124,7 +119,6 @@ class MultiProcessFile(object):
     def buffer(self):
         if getpid() != self.__master:
             return
-
         from queue import Empty
         from collections import defaultdict
         cache = defaultdict(str)
@@ -134,8 +128,6 @@ class MultiProcessFile(object):
             except Empty:
                 break
             if pid == ():
-                # show parent output after children
-                # this is what users see, usually
                 pid = (1e100,)  # googol!
             cache[pid] += data
         for pid in sorted(cache):
@@ -165,11 +157,7 @@ class MultiProcessFile(object):
         return getattr(self.__buffer, attr)
 
 
-try:
-    from multiprocessing import Manager
-    Buffer = MultiProcessFile
-except ImportError:
-    Buffer = StringIO
+Buffer = MultiProcessFile
 
 
 class PluginTester(object):
@@ -206,7 +194,6 @@ class PluginTester(object):
         If self.suitepath is None, this must be implemented. The returned suite
         object will be executed with all plugins activated. It may return None.
         Here's an example of a basic suite object you can return:
-
             >>> import unittest
             >>> class SomeTest(unittest.TestCase):
             ...     def runTest(self):
@@ -217,7 +204,7 @@ class PluginTester(object):
         raise NotImplementedError
 
     def _execPlugin(self):
-        """execute the plugin on the internal test suite."""
+        """Execute the plugin on the internal test suite."""
         from nose.config import Config
         from nose.core import TestProgram
         from nose.plugins.manager import PluginManager
@@ -231,13 +218,13 @@ class PluginTester(object):
             conf.ignoreFiles = self.ignoreFiles
         if not self.suitepath:
             suite = self.makeSuite()
-        self.nose = TestProgram(argv=self.argv, config=conf, suite=suite,
-                                exit=False)
+        self.nose = TestProgram(
+            argv=self.argv, config=conf, suite=suite, exit=False
+        )
         self.output = AccessDecorator(stream)
 
     def setUp(self):
-        """runs nosetests with the specified test suite,
-        all plugins activated."""
+        """Runs nosetests with the specified test suite with all plugins."""
         self.argv = ['nosetests', self.activate]
         if self.args:
             self.argv.extend(self.args)
@@ -280,7 +267,6 @@ def blankline_separated_blocks(text):
 
 
 def remove_stack_traces(out):
-    # this regexp taken from Python 2.5's doctest
     traceback_re = re.compile(r"""
         # Grab the traceback header.  Different versions of Python have
         # said different things on the first traceback line.
@@ -305,7 +291,7 @@ def remove_stack_traces(out):
 
 def simplify_warnings(out):
     warn_re = re.compile(r"""
-        # Cut the file and line no, up to the warning name
+        # Cut the file and line no, up to the warning name.
         ^.*:\d+:\s
         (?P<category>\w+): \s+        # warning category
         (?P<detail>.+) $ \n?          # warning message
@@ -337,9 +323,8 @@ def run(*arg, **kw):
     Use this version of run wherever you are writing a doctest that
     tests nose (or unittest) test result output.
     Note: do not use doctest: +ELLIPSIS when testing nose output,
-    since ellipses ("test_foo ... ok") in your expected test runner
-    output may match multiple lines of output, causing spurious test
-    passes!"""
+    since ellipses ("test_foo ... ok") in your expected test runner output
+    may match multiple lines of output, causing spurious test passes!"""
     from nose import run
     from nose.config import Config
     from nose.plugins.manager import PluginManager
@@ -356,8 +341,7 @@ def run(*arg, **kw):
     kw['config'].stream = buffer
     # Set up buffering so that all output goes to our buffer,
     # or warn user if deprecated behavior is active. If this is not
-    # done, prints and warnings will either be out of place or
-    # disappear.
+    # done, prints and warnings will either be out of place or disappear.
     stderr = sys.stderr
     stdout = sys.stdout
     if kw.pop('buffer_all', False):

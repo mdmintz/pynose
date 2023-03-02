@@ -13,11 +13,9 @@ Hello World
 ===========
 Here's a basic plugin.  It doesn't do much so read on for more ideas or dive
 into the :doc:`IPluginInterface <interface>` to see all available hooks.
-.. code-block:: python
 
     import logging
     import os
-
     from nose.plugins import Plugin
 
     log = logging.getLogger('nose.plugins.helloworld')
@@ -38,14 +36,12 @@ into the :doc:`IPluginInterface <interface>` to see all available hooks.
 
 Registering
 ===========
-.. Note::
-  Important note: the following applies only to the default
-  plugin manager. Other plugin managers may use different means to
-  locate and load plugins.
+.. Note:
+   Important note: the following applies only to the default plugin manager.
+   Other plugin managers may use different means to locate and load plugins.
 For nose to find a plugin, it must be part of a package that uses
 setuptools_, and the plugin must be included in the entry points defined
 in the setup.py for the package:
-.. code-block:: python
 
     setup(name='Some plugin',
         # ...
@@ -55,18 +51,15 @@ in the setup.py for the package:
                 ]
             },
         # ...
-        )
+    )
 
-Once the package is installed with install or develop, nose will be able
-to load the plugin.
-.. _setuptools: http://peak.telecommunity.com/DevCenter/setuptools
+Once the package is installed with install or develop,
+nose will be able to load the plugin.
 
 Registering a plugin without setuptools
 =======================================
 It is currently possible to register a plugin programmatically by
 creating a custom nose runner like this :
-
-.. code-block:: python
 
     import nose
     from yourplugin import YourPlugin
@@ -105,46 +98,31 @@ Recipes
   want to prevent the builtin ``TextTestResult`` output, implement
   ``setOutputSteam`` and *return a dummy stream*. The default output will go
   to the dummy stream, while you send your desired output to the real stream.
-
-  Example: `examples/html_plugin/htmlplug.py`_
-
 * Writing a plugin that handles exceptions:
   Subclass :doc:`ErrorClassPlugin <errorclasses>`.
   Examples: :doc:`nose.plugins.deprecated <deprecated>`,
   :doc:`nose.plugins.skip <skip>`
-
 * Writing a plugin that adds detail to error reports
   Implement ``formatError`` and/or ``formatFailure``. The error tuple
   you return (error class, error message, traceback) will replace the
   original error tuple.
   Examples: :doc:`nose.plugins.capture <capture>`,
   :doc:`nose.plugins.failuredetail <failuredetail>`
-
 * Writing a plugin that loads tests from files other than python modules
   Implement ``wantFile`` and ``loadTestsFromFile``. In ``wantFile``,
   return True for files that you want to examine for tests. In
   ``loadTestsFromFile``, for those files, return an iterable
   containing TestCases (or yield them as you find them;
   ``loadTestsFromFile`` may also be a generator).
-
-  Example: :doc:`nose.plugins.doctests <doctests>`
-
 * Writing a plugin that prints a report
   Implement ``begin`` if you need to perform setup before testing
   begins. Implement ``report`` and output your report to the provided stream.
-
-  Examples: :doc:`nose.plugins.cover <cover>`, :doc:`nose.plugins.prof <prof>`
-
 * Writing a plugin that selects or rejects tests
   Implement any or all ``want*``  methods. Return False to reject the test
   candidate, True to accept it -- which  means that the test candidate
   will pass through the rest of the system, so you must be prepared to
   load tests from it if tests can't be loaded by the core loader or
-  another plugin -- and None if you don't care.
-
-  Examples: :doc:`nose.plugins.attrib <attrib>`,
-  :doc:`nose.plugins.doctests <doctests>`, :doc:`nose.plugins.testid <testid>`
-"""
+  another plugin -- and None if you don't care. """
 from nose.plugins.base import Plugin  # noqa
 from nose.plugins.manager import *  # noqa
 from nose.plugins.plugintest import PluginTester  # noqa

@@ -149,8 +149,9 @@ def deferred(timeout=None):
             try:
                 error = q.get(timeout=timeout)
             except Empty:
-                raise TimeExpired("timeout expired before end of test (%f s.)"
-                                  % timeout)
+                raise TimeExpired(
+                    "timeout expired before end of test (%f s.)" % timeout
+                )
             # Re-raise all exceptions
             if error is not None:
                 exc_type, exc_value, tb = error

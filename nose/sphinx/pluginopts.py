@@ -2,22 +2,18 @@
 This:
  .. autoplugin :: nose.plugins.foo
     :plugin: Pluggy
-
 Produces:
   .. automodule :: nose.plugins.foo
-
-  Options
-  -------
+Options
+-------
   .. cmdoption :: --foo=BAR, --fooble=BAR
     Do the foo thing to the new thing.
-
-  Plugin
-  ------
+Plugin
+------
   .. autoclass :: nose.plugins.foo.Pluggy
      :members:
-
-  Source
-  ------
+Source
+------
   .. include :: path/to/nose/plugins/foo.py
      :literal: """
 import os
@@ -72,10 +68,10 @@ def autoplugin_directive(dirname, arguments, options, content, lineno,
     rst.append('Source', '<autodoc>')
     rst.append('------', '<autodoc>')
     rst.append(
-            '.. include :: %s\n' % utils.relative_path(
-                state_machine.document['source'],
-                os.path.abspath(mod.__file__.replace('.pyc', '.py'))),
-            '<autodoc>')
+        '.. include :: %s\n' % utils.relative_path(
+            state_machine.document['source'],
+            os.path.abspath(mod.__file__.replace('.pyc', '.py'))),
+        '<autodoc>')
     rst.append('   :literal:\n', '<autodoc>')
     rst.append('', '<autodoc>')
     node = nodes.section()
@@ -92,8 +88,7 @@ def autoplugin_directive(dirname, arguments, options, content, lineno,
 
 def autohelp_directive(dirname, arguments, options, content, lineno,
                        content_offset, block_text, state, state_machine):
-    config = Config(parserClass=OptBucket,
-                    plugins=BuiltinPluginManager())
+    config = Config(parserClass=OptBucket, plugins=BuiltinPluginManager())
     parser = config.getParser(TestProgram.usage())
     rst = ViewList()
     for line in parser.format_help().split('\n'):

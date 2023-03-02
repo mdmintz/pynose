@@ -62,9 +62,7 @@ if sys.argv[-1] == "publish":
     sys.exit()
 
 addl_args = dict(
-    packages=[
-        "nose", "nose.ext", "nose.plugins", "nose.sphinx", "nose.tools"
-    ],
+    packages=["nose", "nose.plugins", "nose.sphinx", "nose.tools"],
     scripts=["bin/nosetests", "bin/pynose"],
 )
 
