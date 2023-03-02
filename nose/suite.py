@@ -87,7 +87,7 @@ class LazySuite(unittest.TestSuite):
     def _set_tests(self, tests):
         self._precache = []
         is_suite = isinstance(tests, unittest.TestSuite)
-        if isinstance(tests, collections.Callable) and not is_suite:
+        if isinstance(tests, collections.abc.Callable) and not is_suite:
             self.test_generator = tests()
         elif is_suite:
             self.addTests([tests])
@@ -401,7 +401,7 @@ class ContextSuiteFactory(object):
 
     def findContext(self, tests):
         if (
-            isinstance(tests, collections.Callable)
+            isinstance(tests, collections.abc.Callable)
             or isinstance(tests, unittest.TestSuite)
         ):
             return None
@@ -484,7 +484,7 @@ class ContextSuiteFactory(object):
     def wrapTests(self, tests):
         log.debug("wrap %s", tests)
         if (
-            isinstance(tests, collections.Callable)
+            isinstance(tests, collections.abc.Callable)
             or isinstance(tests, unittest.TestSuite)
         ):
             log.debug("I won't wrap")

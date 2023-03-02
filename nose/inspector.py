@@ -137,14 +137,14 @@ class Expander:
         elif ttype == tokenize.NAME:
             try:
                 val = self.locals[tok]
-                if isinstance(val, collections.Callable):
+                if isinstance(val, collections.abc.Callable):
                     val = tok
                 else:
                     val = repr(val)
             except KeyError:
                 try:
                     val = self.globals[tok]
-                    if isinstance(val, collections.Callable):
+                    if isinstance(val, collections.abc.Callable):
                         val = tok
                     else:
                         val = repr(val)

@@ -67,7 +67,7 @@ class TestSuite(unittest.TestSuite):
     wrap tests in a nose.case.Test so prepareTestCase will be called."""
     def __init__(self, tests=(), conf=None):
         self.conf = conf
-        if isinstance(tests, collections.Callable):
+        if isinstance(tests, collections.abc.Callable):
             tests = tests()
         log.debug("TestSuite(%r)", tests)
         unittest.TestSuite.__init__(self, tests)

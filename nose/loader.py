@@ -207,7 +207,7 @@ class TestLoader(unittest.TestLoader):
             try:
                 for test in g():
                     test_func, arg = self.parseGeneratedTest(test)
-                    if not isinstance(test_func, collections.Callable):
+                    if not isinstance(test_func, collections.abc.Callable):
                         test_func = getattr(m, test_func)
                     yield FunctionTestCase(test_func, arg=arg, descriptor=g)
             except KeyboardInterrupt:
@@ -235,11 +235,11 @@ class TestLoader(unittest.TestLoader):
             try:
                 for test in g():
                     test_func, arg = self.parseGeneratedTest(test)
-                    if not isinstance(test_func, collections.Callable):
+                    if not isinstance(test_func, collections.abc.Callable):
                         test_func = unbound_method(c, getattr(c, test_func))
                     if ismethod(test_func):
                         yield MethodTestCase(test_func, arg=arg, descriptor=g)
-                    elif isinstance(test_func, collections.Callable):
+                    elif isinstance(test_func, collections.abc.Callable):
                         yield MethodTestCase(g, test=test_func, arg=arg)
                     else:
                         yield Failure(

@@ -194,28 +194,24 @@ class AttributeSelector(Plugin):
             match = True
             for key, value in group:
                 attr = get_method_attr(method, cls, key)
-                if isinstance(value, collections.Callable):
+                if isinstance(value, collections.abc.Callable):
                     if not value(key, method, cls):
                         match = False
                         break
                 elif value is True:
-                    # value must exist and be True
                     if not bool(attr):
                         match = False
                         break
                 elif value is False:
-                    # value must not exist or be False
                     if bool(attr):
                         match = False
                         break
                 elif type(attr) in (list, tuple):
-                    # value must be found in the list attribute
                     if not str(value).lower() in [str(x).lower()
                                                   for x in attr]:
                         match = False
                         break
                 else:
-                    # value must match, convert to string and compare
                     if (
                         value != attr
                         and str(value).lower() != str(attr).lower()

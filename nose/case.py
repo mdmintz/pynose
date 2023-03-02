@@ -21,7 +21,7 @@ class Test(unittest.TestCase):
     __test__ = False  # do not collect
 
     def __init__(self, test, config=None, resultProxy=None):
-        if not isinstance(test, collections.Callable):
+        if not isinstance(test, collections.abc.Callable):
             raise TypeError(
                 "nose.case.Test called with argument %r that "
                 "is not callable. A callable is required."
