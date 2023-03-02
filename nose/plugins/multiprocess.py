@@ -10,56 +10,52 @@ spend most of their time waiting for data to arrive from someplace else.
 
 How tests are distributed
 =========================
-The ideal case would be to dispatch each test to a worker process
-separately. This ideal is not attainable in all cases, however, because many
-test suites depend on context (class, module or package) fixtures.
+The ideal case would be to dispatch each test to a worker process separately.
+This ideal is not attainable in all cases, however, because many test suites
+depend on context (class, module, or package) fixtures.
 The plugin can't know (unless you tell it -- see below!) if a context fixture
 can be called many times concurrently (is re-entrant), or if it can be shared
 among tests running in different processes. Therefore, if a context has
-fixtures, the default behavior is to dispatch the entire suite to a worker as
-a unit.
+fixtures, the default behavior is to dispatch the suite to a worker as a unit.
 
 Controlling distribution
 ========================
-There are two context-level variables that you can use to control this default
-behavior.
+There are two context-level variables to control this default behavior:
 * If a context's fixtures are re-entrant, set `_multiprocess_can_split_ = True`
 in the context, and the plugin will dispatch tests in suites bound to that
 context as if the context had no fixtures. This means that the fixtures will
 execute concurrently and multiple times, typically once per test.
 * If a context's fixtures can be shared by tests running in different processes
--- such as a package-level fixture that starts an external http server or
-initializes a shared database -- then set ``_multiprocess_shared_ = True`` in
-the context. These fixtures will then execute in the primary nose process, and
-tests in those contexts will be individually dispatched to run in parallel.
+(such as a package-level fixture that starts an external http server or
+initializes a shared database) then set ``_multiprocess_shared_ = True`` in
+the context. These fixtures will then execute in the primary nose process,
+and tests in those contexts will be individually dispatched to run in parallel.
 
 How results are collected and reported
 ======================================
 As each test or suite executes in a worker process, results (failures, errors,
-and specially handled exceptions like SkipTest) are collected in that
-process. When the worker process finishes, it returns results to the main
-nose process. There, any progress output is printed (dots!), and the
-results from the test run are combined into a consolidated result
-set. When results have been received for all dispatched tests, or all
-workers have died, the result summary is output as normal.
+and specially handled exceptions like SkipTest) are collected in that process.
+When the worker process finishes, it returns results to the main nose process.
+There, any progress output is printed (dots!), and the results from the
+test run are combined into a consolidated result set.
+When results have been received for all dispatched tests,
+or all workers have died, the result summary is output as normal.
 
 Beware!
 =======
-Not all test suites will benefit from, or even operate correctly using, this
+Not all test suites will benefit from, or even operate correctly using this
 plugin. For example, CPU-bound tests will run more slowly if you don't have
-multiple processors. There are also some differences in plugin
-interactions and behaviors due to the way in which tests are dispatched and
-loaded. In general, test loading under this plugin operates as if it were
-always in directed mode instead of discovered mode. For instance, doctests
-in test modules will always be found when using this plugin with the doctest
-plugin.
-
+multiple processors. There are also some differences in plugin interactions
+and behaviors due to the way in which tests are dispatched and loaded.
+In general, tests loaded under this plugin operate as if they were always in
+directed mode instead of discovered mode. For instance, doctests in test
+modules will always be found when using this plugin with the doctest plugin.
 But the biggest issue you will face is probably concurrency. Unless you
 have kept your tests as religiously pure unit tests, with no side-effects, no
 ordering issues, and no external dependencies, chances are you will experience
 odd, intermittent and unexplainable failures and errors when using this
-plugin. This doesn't necessarily mean the plugin is broken; it may mean that
-your test suite is not safe for concurrency."""
+plugin. This doesn't necessarily mean the plugin is broken;
+it may mean that your test suite is not safe for concurrency."""
 import logging
 import os
 import sys
@@ -249,7 +245,6 @@ class MultiProcessTestRunner(TextTestRunner):
                             if getattr(an, '_multiprocess_shared_', False):
                                 an._multiprocess_can_split_ = True
                     self.collect(case, testQueue, tasks, to_teardown, result)
-
             else:
                 test_addr = self.addtask(testQueue, tasks, case)
                 log.debug(
@@ -315,7 +310,6 @@ class MultiProcessTestRunner(TextTestRunner):
             )
             workers.append(p)
             log.debug("Started worker process %s", i+1)
-
         total_tasks = len(tasks)
         nexttimeout = self.config.multiprocess_timeout
         thrownError = None
@@ -350,8 +344,7 @@ class MultiProcessTestRunner(TextTestRunner):
                         completed.append([addr, batch_result])
                     self.consolidate(result, batch_result)
                     if (
-                        self.config.stopOnError
-                        and not result.wasSuccessful()
+                        self.config.stopOnError and not result.wasSuccessful()
                     ):
                         shouldStop.set()
                         break
@@ -370,9 +363,8 @@ class MultiProcessTestRunner(TextTestRunner):
                                 result,
                             )
                 except Empty:
-                    log.debug("Timed out with %s tasks pending "
-                              "(empty testQueue=%r): %s",
-                              len(tasks), testQueue.empty(), str(tasks))
+                    msg = "Timeout - %s tasks pending (empty testQueue=%r): %s"
+                    log.debug(msg, len(tasks), testQueue.empty(), str(tasks))
                     any_alive = False
                     for iworker, w in enumerate(workers):
                         if w.is_alive():
@@ -384,9 +376,8 @@ class MultiProcessTestRunner(TextTestRunner):
                                 > self.config.multiprocess_timeout - 0.1
                             ):
                                 log.debug(
-                                    'worker %d has finished its work item, '
-                                    'but is not exiting? do we wait for it?',
-                                    iworker,
+                                    'Worker %d finished its work item, but is '
+                                    'not exiting. Do we wait for it?', iworker,
                                 )
                             else:
                                 any_alive = True
@@ -395,10 +386,8 @@ class MultiProcessTestRunner(TextTestRunner):
                                 and timeprocessing
                                 > self.config.multiprocess_timeout - 0.1
                             ):
-                                log.debug(
-                                    'timed out worker %s: %s',
-                                    iworker, worker_addr
-                                )
+                                msg = 'Timed out worker %s: %s'
+                                log.debug(msg, iworker, worker_addr)
                                 w.currentaddr.value = bytes_('')
                                 w.keyboardCaught.clear()
                                 startkilltime = time.time()
@@ -410,9 +399,8 @@ class MultiProcessTestRunner(TextTestRunner):
                                         time.time() - startkilltime
                                         > self.waitkilltime
                                     ):
-                                        log.error(
-                                            "terminating worker %s", iworker
-                                        )
+                                        msg = "terminating worker %s"
+                                        log.error(msg, iworker)
                                         w.terminate()
                                         workers[iworker] = w = (
                                             self.startProcess(
@@ -431,10 +419,7 @@ class MultiProcessTestRunner(TextTestRunner):
                         break
                 nexttimeout = self.config.multiprocess_timeout
                 for w in workers:
-                    if (
-                        w.is_alive()
-                        and len(w.currentaddr.value) > 0
-                    ):
+                    if w.is_alive() and len(w.currentaddr.value) > 0:
                         timeprocessing = time.time() - w.currentstart.value
                         if timeprocessing <= self.config.multiprocess_timeout:
                             nexttimeout = min(
@@ -475,8 +460,7 @@ class MultiProcessTestRunner(TextTestRunner):
                         log.debug('failed to join worker %s', iworker)
         except (KeyboardInterrupt, SystemExit):
             log.info(
-                'parent received ctrl-c when shutting down: '
-                'stop all processes'
+                'parent received ctrl-c when shutting down: stop all processes'
             )
             for worker in workers:
                 if worker.is_alive():
@@ -525,8 +509,7 @@ class MultiProcessTestRunner(TextTestRunner):
     address = staticmethod(address)
 
     def nextBatch(self, test):
-        # allows tests or suites to mark themselves as not safe
-        # for multiprocess execution
+        # Tests can mark themselves as not safe for multiprocess execution.
         if hasattr(test, 'context'):
             if not getattr(test.context, '_multiprocess_', True):
                 return
@@ -552,11 +535,9 @@ class MultiProcessTestRunner(TextTestRunner):
                     yield batch
 
     def checkCanSplit(context, fixt):
-        """Callback that we use to check whether the fixtures found in a
-        context or ancestor are ones we care about.
-        Contexts can tell us that their fixtures are reentrant by setting
-        _multiprocess_can_split_. So if we see that, we return False to
-        disregard those fixtures."""
+        """Callback to check whether the fixtures found in a context or
+        ancestor are ones we care about. Contexts can tell us that their
+        fixtures are reentrant by setting _multiprocess_can_split_."""
         if not fixt:
             return False
         if getattr(context, '_multiprocess_can_split_', False):
@@ -712,7 +693,7 @@ def __runner(
 class NoSharedFixtureContextSuite(ContextSuite):
     """Context suite that never fires shared fixtures.
     When a context sets _multiprocess_shared_, fixtures in that context
-    are executed by the main process. Using this suite class prevents them
+    are executed by the main process. Using this class prevents them
     from executing in the runner process as well."""
     testQueue = None
     tasks = None
