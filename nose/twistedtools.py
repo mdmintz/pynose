@@ -23,7 +23,7 @@ Or, more realistically:
       d.addCallback(check_ip)
       return d
 
-.. _Twisted: http://twistedmatrix.com/trac/ """
+.. _Twisted: https://twisted.org/ """
 import sys
 from queue import Queue, Empty
 from nose.tools import make_decorator, TimeExpired
@@ -106,7 +106,7 @@ def deferred(timeout=None):
         def test_error():
             return reactor.resolve("xxxjhjhj.biz")
 
-    and this is bad::
+    and this is bad:
 
         @deferred()
         @raises(DNSLookupError)

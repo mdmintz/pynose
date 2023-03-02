@@ -102,8 +102,7 @@ class LazySuite(unittest.TestSuite):
 
 
 class ContextSuite(LazySuite):
-    """A suite with context.
-    A ContextSuite executes fixtures (setup and teardown functions or
+    """ContextSuite executes fixtures (setup and teardown functions or
     methods) for the context containing its tests.
     The context may be explicitly passed. If it is not, a context (or
     nested set of contexts) will be constructed by examining the tests
@@ -338,11 +337,6 @@ class ContextSuite(LazySuite):
 
 
 class ContextSuiteFactory(object):
-    """Factory for ContextSuites. Called with a collection of tests,
-    the factory decides on a hierarchy of contexts by introspecting
-    the collection or the tests themselves to find the objects
-    containing the test objects. It always returns one suite, but that
-    suite may consist of a hierarchy of nested suites."""
     suiteClass = ContextSuite
 
     def __init__(self, config=None, suiteClass=None, resultProxy=_def):
@@ -434,19 +428,6 @@ class ContextSuiteFactory(object):
         return suite
 
     def mixedSuites(self, tests):
-        """The complex case where there are tests that don't all share
-        the same context. Groups tests into suites with common ancestors,
-        according to the following (essentially tail-recursive) procedure:
-        * Starting with the context of the first test, if it is not
-        None, look for tests in the remaining tests that share that
-        ancestor. If any are found, group into a suite with that
-        ancestor as the context, and replace the current suite with
-        that suite. Continue this process for each ancestor of the
-        first test, until all ancestors have been processed. At this
-        point if any tests remain, recurse with those tests as the
-        input, returning a list of the common suite (which may be the
-        suite or test we started with, if no common tests were found)
-        plus the results of recursion."""
         if not tests:
             return []
         head = tests.pop(0)
@@ -508,9 +489,6 @@ class ContextSuiteFactory(object):
 
 
 class ContextList(object):
-    """Not quite a suite -- a group of tests in a context. This is used
-    to hint the ContextSuiteFactory about what context the tests
-    belong to, in cases where it may be ambiguous or missing."""
     def __init__(self, tests, context=None):
         self.tests = tests
         self.context = context
@@ -520,10 +498,6 @@ class ContextList(object):
 
 
 class FinalizingSuiteWrapper(unittest.TestSuite):
-    """Wraps suite and calls final function after suite has
-    executed. Used to call final functions in cases (like running in
-    the standard test runner) where test running is not under nose's
-    control."""
     def __init__(self, suite, finalize):
         super(FinalizingSuiteWrapper, self).__init__()
         self.suite = suite
@@ -545,14 +519,14 @@ class FinalizingSuiteWrapper(unittest.TestSuite):
 class TestDir:
     def __init__(*arg, **kw):
         raise NotImplementedError(
-            "TestDir is not usable with nose 0.10. The class is present "
-            "in nose.suite for backwards compatibility purposes but it "
-            "may not be used.")
+            "TestDir is not usable. The class is present in nose.suite "
+            "for backwards compatibility purposes but it may not be used."
+        )
 
 
 class TestModule:
     def __init__(*arg, **kw):
         raise NotImplementedError(
-            "TestModule is not usable with nose 0.10. The class is present "
-            "in nose.suite for backwards compatibility purposes but it "
-            "may not be used.")
+            "TestModule is not usable. The class is present in nose.suite "
+            "for backwards compatibility purposes but it may not be used."
+        )

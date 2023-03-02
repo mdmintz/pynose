@@ -273,13 +273,9 @@ def runmodule(name='__main__', **kw):
 
 def collector():
     """TestSuite replacement entry point. Use anywhere you might use a
-    unittest.TestSuite. The collector will, by default, load options from
+    unittest.TestSuite. The collector will load options from
     all config files and execute loader.loadTestsFromNames() on the
     configured testNames, or '.' if no testNames are configured."""
-    # plugins that implement any of these methods are disabled, since
-    # we don't control the test runner and won't be able to run them
-    # finalize() is also not called, but plugins that use it aren't disabled,
-    # because capture needs it.
     setuptools_incompat = ('report', 'prepareTest',
                            'prepareTestLoader', 'prepareTestRunner',
                            'setOutputStream')
