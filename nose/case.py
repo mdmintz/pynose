@@ -120,6 +120,9 @@ class Test(unittest.TestCase):
         finally:
             self.afterTest(result)
 
+    def addDuration(*args, **kwargs):
+        pass
+
     def runTest(self, result):
         """Run the test. Plugins may alter the test by returning a
         value from prepareTestCase. The value must be callable and
@@ -128,6 +131,7 @@ class Test(unittest.TestCase):
         plug_test = self.config.plugins.prepareTestCase(self)
         if plug_test is not None:
             test = plug_test
+        result.addDuration = self.addDuration
         test(result)
 
     def shortDescription(self):

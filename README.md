@@ -8,12 +8,15 @@
 
 ``pynose`` is an updated version of ``nose``, originally made by Jason Pellerin.
 
-This version of ``nose`` is compatible with Python 3.6+ (including 3.11 & up).
+This version of ``nose`` is compatible with Python 3.6+ (including 3.12 & up).
 
 Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
 * Fixes all ``flake8`` issues from the original ``nose``.
-* The default logging level now hides "debug" logs.
+* Fixes "ImportError: cannot import name '_TextTestResult' from 'unittest'."
+* Fixes "RuntimeWarning: TestResult has no addDuration method."
+* Replaces the ``imp`` library with the newer ``importlib`` library.
+* The default logging level now hides "debug" logs for less noise.
 * Adds ``--co`` as a shortcut to using ``--collect-only``.
 
 --------

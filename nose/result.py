@@ -5,7 +5,7 @@ Provides a TextTestResult that extends unittest's _TextTestResult to
 provide support for error classes (such as the builtin skip and deprecated
 classes), and hooks for plugins to take over or extend reporting."""
 import logging
-from unittest import _TextTestResult
+from unittest import TextTestResult as _TextTestResult
 from nose.config import Config
 from nose.util import isclass, ln as _ln
 
@@ -32,6 +32,7 @@ class TextTestResult(_TextTestResult):
             config = Config()
         self.config = config
         _TextTestResult.__init__(self, stream, descriptions, verbosity)
+        _TextTestResult.addDuration = None
 
     def addSkip(self, test, reason):
         from nose.plugins.skip import SkipTest
