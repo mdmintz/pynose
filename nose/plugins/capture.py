@@ -22,8 +22,7 @@ class Capture(Plugin):
     appending any output captured to the error or failure output,
     should the test fail or raise an error."""
     enabled = True
-    env_opt = 'NOSE_NOCAPTURE'
-    name = 'capture'
+    name = "capture"
     score = 1600
 
     def __init__(self):
@@ -34,7 +33,7 @@ class Capture(Plugin):
         """Register commandline options"""
         parser.add_option(
             "-s", "--nocapture", action="store_false",
-            default=not env.get(self.env_opt), dest="capture",
+            default=False, dest="capture",
             help="Don't capture stdout (any stdout output "
             "will be printed immediately) [NOSE_NOCAPTURE]"
         )
