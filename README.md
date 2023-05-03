@@ -15,8 +15,9 @@ Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes all ``flake8`` issues from the original ``nose``.
 * Fixes "ImportError: cannot import name '_TextTestResult' from 'unittest'."
 * Fixes "RuntimeWarning: TestResult has no addDuration method."
-* Replaces the ``imp`` library with the newer ``importlib`` library.
+* Replaces the ``imp`` module with the newer ``importlib`` module.
 * The default logging level now hides "debug" logs for less noise.
+* The ``-s`` option is always active to see the output of ``print()``.
 * Adds ``--co`` as a shortcut to using ``--collect-only``.
 
 --------
