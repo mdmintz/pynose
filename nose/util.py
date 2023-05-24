@@ -16,6 +16,8 @@ class_types = (ClassType, TypeType)
 skip_pattern = (
     r"(?:\.svn)|(?:[^.]+\.py[co])|(?:.*~)|(?:.*\$py\.class)|(?:__pycache__)"
 )
+if not hasattr(inspect, "getargspec"):
+    inspect.getargspec = lambda func: inspect.getfullargspec(func)[:4]
 try:
     set()
 except NameError:
@@ -422,8 +424,9 @@ def try_run(obj, names):
                     ):
                         func = func.__call__
                     try:
-                        args, varargs, varkw, defaults = \
+                        args, varargs, varkw, defaults = (
                             inspect.getargspec(func)
+                        )
                         args.pop(0)  # pop the self off
                     except TypeError:
                         raise TypeError("Attribute %s of %r is not a python "
