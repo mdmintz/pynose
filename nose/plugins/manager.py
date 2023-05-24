@@ -49,6 +49,8 @@ from nose.pyversion import sort_list
 __all__ = ['DefaultPluginManager', 'PluginManager', 'EntryPointPluginManager',
            'BuiltinPluginManager', 'RestrictedPluginManager']
 log = logging.getLogger(__name__)
+if not hasattr(inspect, "getargspec"):
+    inspect.getargspec = lambda func: inspect.getfullargspec(func)[:4]
 
 
 class PluginProxy(object):
