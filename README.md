@@ -12,9 +12,10 @@ This version of ``nose`` is compatible with Python 3.6+ (including 3.12 & up).
 
 Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
-* Fixes all ``flake8`` issues from the original ``nose``.
+* Fixes "AttributeError: module 'inspect' has no attribute 'getargspec'."
 * Fixes "ImportError: cannot import name '_TextTestResult' from 'unittest'."
 * Fixes "RuntimeWarning: TestResult has no addDuration method."
+* Fixes all ``flake8`` issues from the original ``nose``.
 * Replaces the ``imp`` module with the newer ``importlib`` module.
 * The default logging level now hides "debug" logs for less noise.
 * The ``-s`` option is always active to see the output of ``print()``.
