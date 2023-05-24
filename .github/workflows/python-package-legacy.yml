@@ -1,3 +1,6 @@
+#
+# Execute the tests for Python versions that are End Of Life.
+#
 name: CI build (Legacy)
 
 on:
@@ -42,9 +45,8 @@ jobs:
         flake8 . --count --show-source --statistics --exclude=temp
     - name: Make sure pynose is working
       run: |
-        echo "def test_1(): pass" > nothing.py
-        pynose nothing.py
-        nosetests nothing.py
+        pynose tests
+        nosetests tests
     - name: Verify pynose clone from GitHub
       run: |
         git clone https://github.com/mdmintz/pynose.git
