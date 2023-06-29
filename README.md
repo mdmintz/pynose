@@ -1,4 +1,4 @@
-# pynose
+<h1>pynose 🐍👃 <a href="https://pypi.python.org/pypi/pynose" target="_blank"><img src="https://img.shields.io/pypi/v/pynose.svg?color=3399EE" alt="PyPI version" /></a></h1>
 
 ### ``pynose`` fixes ``nose`` to extend [unittest](https://docs.python.org/3/library/unittest.html) and make testing easier.
 
