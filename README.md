@@ -1,20 +1,19 @@
 <h1>pynose 🐍👃 <a href="https://pypi.python.org/pypi/pynose" target="_blank"><img src="https://img.shields.io/pypi/v/pynose.svg?color=3399EE" alt="PyPI version" /></a></h1>
 
-### ``pynose`` fixes ``nose`` to extend [unittest](https://docs.python.org/3/library/unittest.html) and make testing easier.
-
-(NOTE: If you can, use **[pytest](https://docs.pytest.org/)** instead. **[pynose](https://github.com/mdmintz/pynose)** was built to maintain **[nose](https://nose.readthedocs.io/en/latest/)** for developers who still use it.)
+### **[pynose](https://github.com/mdmintz/pynose)** fixes **[nose](https://nose.readthedocs.io/en/latest/)** to extend [unittest](https://docs.python.org/3/library/unittest.html) and make testing easier.
 
 --------
 
 ``pynose`` is an updated version of ``nose``, originally made by Jason Pellerin.
 
-This version of ``nose`` is compatible with Python 3.6+ (including 3.12 & up).
+This version of ``nose`` is compatible with ``Python 3.6+`` (including ``3.12+``).
 
 Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
 * Fixes "AttributeError: module 'inspect' has no attribute 'getargspec'."
 * Fixes "ImportError: cannot import name '_TextTestResult' from 'unittest'."
 * Fixes "RuntimeWarning: TestResult has no addDuration method."
+* Fixes "DeprecationWarning: pkg_resources is deprecated as an API."
 * Fixes all ``flake8`` issues from the original ``nose``.
 * Replaces the ``imp`` module with the newer ``importlib`` module.
 * The default logging level now hides "debug" logs for less noise.
