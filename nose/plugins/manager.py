@@ -324,6 +324,27 @@ class ZeroNinePlugin:
         return getattr(self.plugin, val)
 
 
+def iter_entry_points(group_name):
+    try:
+        from importlib.metadata import entry_points
+    except (ImportError, Exception):
+        try:
+            from pkg_resources import iter_entry_points
+        except (ImportError, OSError):
+            return []
+        else:
+            return iter_entry_points(group_name)
+    groups = entry_points()
+    if hasattr(groups, 'select'):
+        # New interface in Python 3.10 and newer versions of the
+        # importlib_metadata backport.
+        return groups.select(group=group_name)
+    else:
+        # Older interface, deprecated in Python 3.10 and recent
+        # importlib_metadata, but we need it in Python 3.8 and 3.9.
+        return groups.get(group_name, [])
+
+
 class EntryPointPluginManager(PluginManager):
     """Plugin manager that loads plugins from `nose.plugins` entry points."""
     entry_points = (('nose.plugins.0.10', None),
@@ -331,7 +352,6 @@ class EntryPointPluginManager(PluginManager):
 
     def loadPlugins(self):
         """Load plugins by iterating the `nose.plugins` entry point."""
-        from pkg_resources import iter_entry_points
         loaded = {}
         for entry_point, adapt in self.entry_points:
             for ep in iter_entry_points(entry_point):

@@ -65,7 +65,12 @@ if sys.argv[-1] == "publish":
 
 addl_args = dict(
     packages=["nose", "nose.plugins", "nose.sphinx", "nose.tools"],
-    scripts=["bin/nosetests", "bin/pynose"],
+    entry_points={
+        "console_scripts": [
+            "nosetests = nose.core:run_exit",
+            "pynose = nose.core:run_exit",
+        ]
+    },
 )
 
 setup(
