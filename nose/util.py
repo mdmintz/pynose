@@ -192,7 +192,7 @@ def isproperty(obj):
     False
     >>> isproperty(Foo.get)
     True """
-    return type(obj) == property
+    return type(obj) is property
 
 
 def getfilename(package, relativeTo=None):
