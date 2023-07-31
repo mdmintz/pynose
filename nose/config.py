@@ -339,14 +339,14 @@ class Config(object):
             debugLogAbsPath = os.path.abspath(self.debugLog)
             for h in logger.handlers:
                 if (
-                    type(h) == logging.FileHandler
+                    type(h) is logging.FileHandler
                     and h.baseFilename == debugLogAbsPath
                 ):
                     found = True
         else:
             for h in logger.handlers:
                 if (
-                    type(h) == logging.StreamHandler
+                    type(h) is logging.StreamHandler
                     and h.stream == self.logStream
                 ):
                     found = True
