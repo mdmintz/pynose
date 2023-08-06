@@ -1,12 +1,14 @@
-"""This plugin captures stdout during test execution. If the test fails
+"""This plugin captures stdout during test execution. If a test fails
 or raises an error, the captured output will be appended to the error
-or failure output. It is enabled by default but can be disabled with
-the options ``-s`` or ``--nocapture``.
+or failure output. It is disabled by default, but can be enabled with
+the options: ``--capture-output`` or ``--capture_output``.
+Or enable it by setting os.environ["NOSE_CAPTURE"] to "1".
 
 :Options:
-  ``--nocapture``
-    Don't capture stdout (any stdout output will be printed immediately) """
+  ``--capture-output`` or ``--capture_output``
+    Capture stdout (stdout output will not be printed) """
 import logging
+import os
 import sys
 from nose.plugins.base import Plugin
 from nose.pyversion import exc_to_unicode, force_unicode
@@ -17,10 +19,9 @@ log = logging.getLogger(__name__)
 
 
 class Capture(Plugin):
-    """Output capture plugin. Enabled by default. Disable with ``-s`` or
-    ``--nocapture``. This plugin captures stdout during test execution,
-    appending any output captured to the error or failure output,
-    should the test fail or raise an error."""
+    """Output-capturing plugin. Now disabled by default.
+    Can be enabled with ``--capture-output`` or ``--capture_output``.
+    Or enable it with os.environ["NOSE_CAPTURE"]="1" before tests."""
     enabled = True
     name = "capture"
     score = 1600
@@ -37,11 +38,24 @@ class Capture(Plugin):
             help="Don't capture stdout (any stdout output "
             "will be printed immediately) [NOSE_NOCAPTURE]"
         )
+        parser.add_option(
+            "--capture-output", "--capture_output", action="store_true",
+            default=False, dest="capture_output",
+            help="Capture stdout (stdout output "
+            "will not be printed) [NOSE_CAPTURE]"
+        )
 
     def configure(self, options, conf):
         """Configure plugin. Plugin is enabled by default."""
         self.conf = conf
-        if not options.capture:
+        if (
+            "NOSE_CAPTURE" in os.environ.keys()
+            and os.environ["NOSE_CAPTURE"] == "1"
+        ):
+            self.enabled = True
+        elif options.capture_output:
+            self.enabled = True
+        elif not options.capture:
             self.enabled = False
 
     def afterTest(self, test):
