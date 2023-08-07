@@ -542,4 +542,9 @@ Options
 
    Enable collect-only: Collect and output test names only,
    but do not run any tests. [COLLECT_ONLY]
+
+--capture-output, --capture_output
+
+   Enable capturing output. This hides the output of print().
+   (os.environ["NOSE_CAPTURE"] = "1")
 ```
