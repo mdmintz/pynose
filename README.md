@@ -42,7 +42,7 @@ https://nose.readthedocs.io/en/latest/
 
 --------
 
-```bash
+```
 
 Basic usage
 ***********
