@@ -84,7 +84,7 @@ def deferred(timeout=None):
     The optional timeout parameter specifies the maximum duration of the test.
     The difference with timed() is that timed() will still wait for the test
     to end, while deferred() will stop the test when its timeout has expired.
-    The latter is more desireable when dealing with network tests, because
+    The latter is more desirable when dealing with network tests, because
     the result may actually never arrive.
 
     If the callback is triggered, the test has passed.
