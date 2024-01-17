@@ -50,4 +50,4 @@ jobs:
         git clone https://github.com/mdmintz/pynose.git
     - name: Verify pynose install from PyPI
       run: |
-        pip install pynose -upgrade --no-deps --force-reinstall --no-cache-dir --user
+        pip install pynose --upgrade --no-deps --force-reinstall --no-cache-dir --user
