@@ -31,10 +31,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
+        python -m pip install --upgrade pip setuptools
     - name: Install pynose
       run: |
-        pip install -U setuptools
         python setup.py install
     - name: Lint with flake8
       run: |
