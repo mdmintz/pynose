@@ -34,6 +34,7 @@ jobs:
         python -m pip install --upgrade pip
     - name: Install pynose
       run: |
+        pip install -U setuptools
         python setup.py install
     - name: Lint with flake8
       run: |
