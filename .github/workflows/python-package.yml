@@ -20,13 +20,13 @@ jobs:
       max-parallel: 10
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
 
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -50,4 +50,4 @@ jobs:
         git clone https://github.com/mdmintz/pynose.git
     - name: Verify pynose install from PyPI
       run: |
-        pip install pynose -U --no-deps --force-reinstall --no-cache-dir --user
+        pip install pynose -upgrade --no-deps --force-reinstall --no-cache-dir --user
