@@ -71,15 +71,15 @@ if sys.argv[-1] == "publish":
         print("\n>>> The Release was NOT PUBLISHED to PyPI! <<<\n")
     sys.exit()
 
-addl_args = dict(
-    packages=["nose", "nose.plugins", "nose.sphinx", "nose.tools"],
-    entry_points={
+addl_args = {
+    "packages": ["nose", "nose.plugins", "nose.sphinx", "nose.tools"],
+    "entry_points": {
         "console_scripts": [
             "nosetests = nose.core:run_exit",
             "pynose = nose.core:run_exit",
         ]
     },
-)
+}
 
 setup(
     name="pynose",

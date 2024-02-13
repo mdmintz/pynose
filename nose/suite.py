@@ -319,7 +319,7 @@ class ContextSuite(LazySuite):
 
     def _get_wrapped_tests(self):
         for test in self._get_tests():
-            if isinstance(test, Test) or isinstance(test, unittest.TestSuite):
+            if isinstance(test, (Test, unittest.TestSuite)):
                 yield test
             else:
                 yield Test(
@@ -373,9 +373,7 @@ class ContextSuiteFactory(object):
         log.debug("get ancestry %s", context)
         if context is None:
             return
-        if hasattr(context, 'im_class'):
-            context = context.__self__.__class__
-        elif hasattr(context, '__self__'):
+        if hasattr(context, 'im_class') or hasattr(context, '__self__'):
             context = context.__self__.__class__
         if hasattr(context, '__module__'):
             ancestors = context.__module__.split('.')
@@ -390,8 +388,7 @@ class ContextSuiteFactory(object):
 
     def findContext(self, tests):
         if (
-            isinstance(tests, collections.abc.Callable)
-            or isinstance(tests, unittest.TestSuite)
+            isinstance(tests, (collections.abc.Callable, unittest.TestSuite))
         ):
             return None
         context = None
@@ -432,7 +429,7 @@ class ContextSuiteFactory(object):
         tail = tests[:]
         context = getattr(head, 'context', None)
         if context is not None:
-            ancestors = [context] + [a for a in self.ancestry(context)]
+            ancestors = [context] + list(self.ancestry(context))
             for ancestor in ancestors:
                 common = [suite]
                 remain = []
@@ -460,15 +457,14 @@ class ContextSuiteFactory(object):
     def wrapTests(self, tests):
         log.debug("wrap %s", tests)
         if (
-            isinstance(tests, collections.abc.Callable)
-            or isinstance(tests, unittest.TestSuite)
+            isinstance(tests, (collections.abc.Callable, unittest.TestSuite))
         ):
             log.debug("I won't wrap")
             return tests
         wrapped = []
         for test in tests:
             log.debug("wrapping %s", test)
-            if isinstance(test, Test) or isinstance(test, unittest.TestSuite):
+            if isinstance(test, (Test, unittest.TestSuite)):
                 wrapped.append(test)
             elif isinstance(test, ContextList):
                 wrapped.append(self.makeSuite(test, context=test.context))

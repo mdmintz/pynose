@@ -121,8 +121,7 @@ class PluginProxy(object):
             try:
                 result = meth(*arg, **kw)
                 if result is not None:
-                    for r in result:
-                        yield r
+                    yield from result
             except (KeyboardInterrupt, SystemExit):
                 raise
             except Exception:
@@ -136,6 +135,7 @@ class PluginProxy(object):
             result = meth(*arg, **kw)
             if result is not None:
                 return result
+        return None
 
     def _loadTestsFromNames(self, names, module=None):
         """Chainable but not quite normal. Plugins return a tuple of
@@ -279,16 +279,16 @@ class ZeroNinePlugin:
 
     def addError(self, test, err):
         if not hasattr(self.plugin, 'addError'):
-            return
+            return None
         from nose.exc import SkipTest, DeprecatedTest
         ec, ev, tb = err
         if issubclass(ec, SkipTest):
             if not hasattr(self.plugin, 'addSkip'):
-                return
+                return None
             return self.plugin.addSkip(test.test)
         elif issubclass(ec, DeprecatedTest):
             if not hasattr(self.plugin, 'addDeprecated'):
-                return
+                return None
             return self.plugin.addDeprecated(test.test)
         capt = test.capturedOutput
         return self.plugin.addError(test.test, err, capt)
@@ -296,10 +296,11 @@ class ZeroNinePlugin:
     def loadTestsFromFile(self, filename):
         if hasattr(self.plugin, 'loadTestsFromPath'):
             return self.plugin.loadTestsFromPath(filename)
+        return None
 
     def addFailure(self, test, err):
         if not hasattr(self.plugin, 'addFailure'):
-            return
+            return None
         capt = test.capturedOutput
         tbinfo = test.tbinfo
         return self.plugin.addFailure(test.test, err, capt, tbinfo)
@@ -312,12 +313,12 @@ class ZeroNinePlugin:
 
     def startTest(self, test):
         if not hasattr(self.plugin, 'startTest'):
-            return
+            return None
         return self.plugin.startTest(test.test)
 
     def stopTest(self, test):
         if not hasattr(self.plugin, 'stopTest'):
-            return
+            return None
         return self.plugin.stopTest(test.test)
 
     def __getattr__(self, val):

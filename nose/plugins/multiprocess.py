@@ -331,7 +331,7 @@ class MultiProcessTestRunner(TextTestRunner):
                         try:
                             tasks.remove(addr)
                         except ValueError:
-                            log.warn(
+                            log.warning(
                                 'worker %s failed to remove from tasks: %s',
                                 iworker, addr,
                             )
@@ -531,8 +531,7 @@ class MultiProcessTestRunner(TextTestRunner):
             yield test
         else:
             for case in test:
-                for batch in self.nextBatch(case):
-                    yield batch
+                yield from self.nextBatch(case)
 
     def checkCanSplit(context, fixt):
         """Callback to check whether the fixtures found in a context or

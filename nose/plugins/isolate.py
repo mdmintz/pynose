@@ -67,7 +67,7 @@ class IsolationPlugin(Plugin):
         around each name. The side-effect of this is that full context
         fixtures will be set up and torn down around each test named."""
         if not names or len(names) == 1:
-            return
+            return None
         loader = self.loader
         plugins = self.conf.plugins
 

@@ -78,7 +78,7 @@ class TestLoader(unittest.TestLoader):
         if config.addPaths:
             add_path(workingDir, config)
         self.suiteClass = ContextSuiteFactory(config=config)
-        self._visitedPaths = set([])
+        self._visitedPaths = set()
         unittest.TestLoader.__init__(self)
 
     def getTestCaseNames(self, testCaseClass):
@@ -181,8 +181,7 @@ class TestLoader(unittest.TestLoader):
         provide a list of tests loaded from the file."""
         log.debug("Load from non-module file %s", filename)
         try:
-            tests = [test for test in
-                     self.config.plugins.loadTestsFromFile(filename)]
+            tests = list(self.config.plugins.loadTestsFromFile(filename))
             if tests:
                 tests = [_f for _f in tests if _f]
                 return self.suiteClass(tests)
@@ -325,60 +324,58 @@ class TestLoader(unittest.TestLoader):
                 return suite(
                     ContextList([self.makeTest(obj, parent)], context=parent)
                 )
-        else:
-            if addr.module:
-                try:
-                    if addr.filename is None:
-                        module = resolve_name(addr.module)
-                    else:
-                        self.config.plugins.beforeImport(
+        elif addr.module:
+            try:
+                if addr.filename is None:
+                    module = resolve_name(addr.module)
+                else:
+                    self.config.plugins.beforeImport(
+                        addr.filename, addr.module)
+                    try:
+                        module = self.importer.importFromPath(
                             addr.filename, addr.module)
-                        try:
-                            module = self.importer.importFromPath(
-                                addr.filename, addr.module)
-                        finally:
-                            self.config.plugins.afterImport(
-                                addr.filename, addr.module)
-                except (KeyboardInterrupt, SystemExit):
-                    raise
-                except Exception:
-                    exc = sys.exc_info()
-                    return suite([Failure(exc[0], exc[1], exc[2],
-                                          address=addr.totuple())])
-                if addr.call:
-                    return self.loadTestsFromName(addr.call, module)
-                else:
-                    return self.loadTestsFromModule(
-                        module, addr.filename, discovered=discovered)
-            elif addr.filename:
-                path = addr.filename
-                if addr.call:
-                    package = getpackage(path)
-                    if package is None:
-                        return suite([
-                            Failure(ValueError,
-                                    "Can't find callable %s in file %s: "
-                                    "file is not a python module" %
-                                    (addr.call, path),
-                                    address=addr.totuple())])
-                    return self.loadTestsFromName(addr.call, module=package)
-                else:
-                    if op_isdir(path):
-                        return LazySuite(lambda: self.loadTestsFromDir(path))
-                    elif op_isfile(path):
-                        return self.loadTestsFromFile(path)
-                    else:
-                        return suite([
-                            Failure(
-                                OSError,
-                                "No such file %s" % path,
-                                address=addr.totuple()
-                            )
-                        ])
+                    finally:
+                        self.config.plugins.afterImport(
+                            addr.filename, addr.module)
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except Exception:
+                exc = sys.exc_info()
+                return suite([Failure(exc[0], exc[1], exc[2],
+                                      address=addr.totuple())])
+            if addr.call:
+                return self.loadTestsFromName(addr.call, module)
+            else:
+                return self.loadTestsFromModule(
+                    module, addr.filename, discovered=discovered)
+        elif addr.filename:
+            path = addr.filename
+            if addr.call:
+                package = getpackage(path)
+                if package is None:
+                    return suite([
+                        Failure(ValueError,
+                                "Can't find callable %s in file %s: "
+                                "file is not a python module" %
+                                (addr.call, path),
+                                address=addr.totuple())])
+                return self.loadTestsFromName(addr.call, module=package)
+            elif op_isdir(path):
+                return LazySuite(lambda: self.loadTestsFromDir(path))
+            elif op_isfile(path):
+                return self.loadTestsFromFile(path)
             else:
                 return suite([
-                    Failure(ValueError, "Unresolvable test name %s" % name,
-                            address=addr.totuple())])
+                    Failure(
+                        OSError,
+                        "No such file %s" % path,
+                        address=addr.totuple()
+                    )
+                ])
+        else:
+            return suite([
+                Failure(ValueError, "Unresolvable test name %s" % name,
+                        address=addr.totuple())])
 
     def loadTestsFromNames(self, names, module=None):
         """Load tests from all names, returning a suite containing all tests"""
@@ -401,8 +398,7 @@ class TestLoader(unittest.TestLoader):
         if not cases:
             return super(TestLoader, self).loadTestsFromTestCase(testCaseClass)
         cases.extend(
-            [case for case in
-             super(TestLoader, self).loadTestsFromTestCase(testCaseClass)])
+            list(super(TestLoader, self).loadTestsFromTestCase(testCaseClass)))
         return self.suiteClass(cases)
 
     def loadTestsFromTestClass(self, cls):
@@ -474,11 +470,10 @@ class TestLoader(unittest.TestLoader):
                 parent = obj.__class__
             if issubclass(parent, unittest.TestCase):
                 return parent(obj.__name__)
+            elif isgenerator(obj):
+                return self.loadTestsFromGeneratorMethod(obj, parent)
             else:
-                if isgenerator(obj):
-                    return self.loadTestsFromGeneratorMethod(obj, parent)
-                else:
-                    return MethodTestCase(obj)
+                return MethodTestCase(obj)
         elif isfunction(obj):
             if parent and obj.__module__ != parent.__name__:
                 obj = transplant_func(obj, parent.__name__)
@@ -505,9 +500,9 @@ class TestLoader(unittest.TestLoader):
         """Given the yield value of a test generator, return a func and args.
         This is used in the two loadTestsFromGenerator* methods."""
         if not isinstance(test, tuple):  # yield test
-            test_func, arg = (test, tuple())
+            test_func, arg = (test, ())
         elif len(test) == 1:  # yield (test,)
-            test_func, arg = (test[0], tuple())
+            test_func, arg = (test[0], ())
         else:  # yield test, foo, bar, ...
             assert len(test) > 1  # sanity check
             test_func, arg = (test[0], test[1:])

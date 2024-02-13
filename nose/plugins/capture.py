@@ -49,11 +49,9 @@ class Capture(Plugin):
         """Configure plugin. Plugin is enabled by default."""
         self.conf = conf
         if (
-            "NOSE_CAPTURE" in os.environ.keys()
+            "NOSE_CAPTURE" in os.environ
             and os.environ["NOSE_CAPTURE"] == "1"
-        ):
-            self.enabled = True
-        elif options.capture_output:
+        ) or options.capture_output:
             self.enabled = True
         elif not options.capture:
             self.enabled = False
@@ -116,5 +114,6 @@ class Capture(Plugin):
     def _get_buffer(self):
         if self._buf is not None:
             return self._buf.getvalue()
+        return None
 
     buffer = property(_get_buffer, None, None, """Captured stdout output.""")

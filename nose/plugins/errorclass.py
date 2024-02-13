@@ -113,10 +113,11 @@ class ErrorClassPlugin(Plugin, metaclass=MetaErrorClass):
     def addError(self, test, err):
         err_cls, a, b = err
         if not isclass(err_cls):
-            return
+            return None
         classes = [e[0] for e in self.errorClasses]
         if [c for c in classes if issubclass(err_cls, c)]:
             return True
+        return None
 
     def prepareTestResult(self, result):
         if not hasattr(result, 'errorClasses'):
