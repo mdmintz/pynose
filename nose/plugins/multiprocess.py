@@ -400,7 +400,7 @@ class MultiProcessTestRunner(TextTestRunner):
                                         > self.waitkilltime
                                     ):
                                         msg = "terminating worker %s"
-                                        log.exception(msg, iworker)
+                                        log.error(msg, iworker)
                                         w.terminate()
                                         workers[iworker] = w = (
                                             self.startProcess(

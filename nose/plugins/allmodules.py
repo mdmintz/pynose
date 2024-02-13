@@ -19,9 +19,7 @@ class AllModules(Plugin):
 
     def wantFile(self, file):
         """Override to return True for all files ending with .py"""
-        if file.endswith('.py'):
-            return True
-        return None
+        return file.endswith('.py')
 
     def wantModule(self, module):
         """Override return True for all modules"""
