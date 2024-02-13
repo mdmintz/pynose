@@ -153,7 +153,7 @@ class Test(unittest.TestCase):
             pass
         try:
             if desc == str(self.test):
-                return
+                return None
         except Exception:
             pass
         return desc
@@ -186,7 +186,7 @@ class FunctionTestCase(TestBase):
     __test__ = False  # do not collect
 
     def __init__(
-        self, test, setUp=None, tearDown=None, arg=tuple(), descriptor=None
+        self, test, setUp=None, tearDown=None, arg=(), descriptor=None
     ):
         """Initialize the MethodTestCase.
         Required argument:
@@ -267,7 +267,7 @@ class MethodTestCase(TestBase):
     create test cases for test methods."""
     __test__ = False  # do not collect
 
-    def __init__(self, method, test=None, arg=tuple(), descriptor=None):
+    def __init__(self, method, test=None, arg=(), descriptor=None):
         """Initialize the MethodTestCase.
         Required argument:
         * method -- the method to call, may be bound or unbound. In either

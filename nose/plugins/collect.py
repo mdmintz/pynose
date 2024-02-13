@@ -37,7 +37,7 @@ class CollectOnly(Plugin):
         """Replace actual test with dummy that always passes."""
         log.debug("Preparing test case %s", test)
         if not isinstance(test, Test):
-            return
+            return None
 
         def run(result):
             self.conf.plugins.startTest(test)

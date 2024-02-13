@@ -208,13 +208,12 @@ class AttributeSelector(Plugin):
                                                   for x in attr]:
                         match = False
                         break
-                else:
-                    if (
-                        value != attr
-                        and str(value).lower() != str(attr).lower()
-                    ):
-                        match = False
-                        break
+                elif (
+                    value != attr
+                    and str(value).lower() != str(attr).lower()
+                ):
+                    match = False
+                    break
             any = any or match
         if any:
             return None

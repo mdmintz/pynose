@@ -88,7 +88,7 @@ def absfile(path, where=None):
     orig = path
     if where is None:
         where = os.getcwd()
-    if isinstance(where, list) or isinstance(where, tuple):
+    if isinstance(where, (list, tuple)):
         for maybe_path in where:
             maybe_abs = absfile(path, maybe_path)
             if maybe_abs is not None:
@@ -113,10 +113,7 @@ def absfile(path, where=None):
 
 
 def anyp(predicate, iterable):
-    for item in iterable:
-        if predicate(item):
-            return True
-    return False
+    return any(predicate(item) for item in iterable)
 
 
 def file_like(name):
@@ -412,7 +409,7 @@ def try_run(obj, names):
                 else:
                     # Not a function. If it's callable, call it anyway.
                     if (
-                        hasattr(func, '__call__')
+                        callable(func)
                         and not inspect.ismethod(func)
                     ):
                         func = func.__call__
@@ -431,6 +428,7 @@ def try_run(obj, names):
                     return func(obj)
             log.debug("call fixture %s.%s", obj, name)
             return func()
+    return None
 
 
 def src(filename):
@@ -562,8 +560,7 @@ def transplant_func(func, module):
 
     if isgenerator(func):
         def newfunc(*arg, **kw):
-            for v in func(*arg, **kw):
-                yield v
+            yield from func(*arg, **kw)
     else:
         def newfunc(*arg, **kw):
             return func(*arg, **kw)

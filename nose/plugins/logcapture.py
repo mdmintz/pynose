@@ -81,6 +81,7 @@ class MyMemoryHandler(Handler):
     def filter(self, record):
         if self.filterset.allow(record.name):
             return Handler.filter(self, record)
+        return None
 
     def __getstate__(self):
         state = self.__dict__.copy()
