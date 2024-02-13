@@ -18,13 +18,6 @@ skip_pattern = (
 )
 if not hasattr(inspect, "getargspec"):
     inspect.getargspec = lambda func: inspect.getfullargspec(func)[:4]
-try:
-    set()
-except NameError:
-    try:
-        from sets import Set as set
-    except ImportError:
-        pass
 
 
 def ls_tree(dir_path="",
