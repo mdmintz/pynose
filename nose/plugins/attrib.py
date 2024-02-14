@@ -37,7 +37,7 @@ This test could be run with:
 
     $ nosetests -a speed=slow
 
-In Python 2.6 and higher, ``@attr`` can be used on a class to set attributes
+``@attr`` can be used on a class to set attributes
 on all its test methods at once. For example:
 
     from nose.plugins.attrib import attr
@@ -204,7 +204,7 @@ class AttributeSelector(Plugin):
                         match = False
                         break
                 elif type(attr) in (list, tuple):
-                    if not str(value).lower() in [str(x).lower()
+                    if str(value).lower() not in [str(x).lower()
                                                   for x in attr]:
                         match = False
                         break
