@@ -43,8 +43,10 @@ jobs:
     - name: Make sure pynose is working
       run: |
         echo "def test_1(): pass" > nothing.py
-        pynose nothing.py
-        nosetests nothing.py
+        pynose nothing.py --co -v
+        pynose nothing.py -v
+        nosetests nothing.py --co -v
+        nosetests nothing.py -v
     - name: Verify pynose clone from GitHub
       run: |
         git clone https://github.com/mdmintz/pynose.git
