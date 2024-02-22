@@ -6,7 +6,7 @@
 
 ``pynose`` is an updated version of ``nose``, originally made by Jason Pellerin.
 
-This version of ``nose`` is compatible with ``Python 3.7+`` (including ``3.12+``).
+This version of ``nose`` is compatible with ``Python 3.7+`` (including ``3.13+``).
 
 Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes "AttributeError: module 'collections' has no attribute 'Callable'."
