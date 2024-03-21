@@ -111,7 +111,7 @@ class LogCapture(Plugin):
         """Register commandline options."""
         parser.add_option(
             "--nologcapture", action="store_false",
-            default=0, dest="logcapture",
+            default=not env.get(self.env_opt), dest="logcapture",
             help="Disable logging capture plugin. "
                  "Logging configuration will be left intact."
                  " [NOSE_NOLOGCAPTURE]")
