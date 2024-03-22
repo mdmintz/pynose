@@ -12,6 +12,7 @@ or myapp.foo.bar logger will be logged.
 You can remove other installed logging handlers with the
 ``--logging-clear-handlers`` option."""
 import logging
+import os
 import threading
 from logging import Handler
 from nose.plugins.base import Plugin
@@ -116,6 +117,18 @@ class LogCapture(Plugin):
                  "Logging configuration will be left intact."
                  " [NOSE_NOLOGCAPTURE]")
         parser.add_option(
+            "--capture-logs", "--capture_logs", action="store_true",
+            default=0, dest="capture_logs",
+            help="Enable logging capture plugin. "
+                 "Logging configuration will be left intact."
+                 " [NOSE_CAPTURELOGS]")
+        parser.add_option(
+            "--logging-init", action="store_true",
+            default=0, dest="logging_init",
+            help="Initialize standard logging configuration with:\n"
+                 "logging.basicConfig(level)\n"
+                 " [NOSE_LOGINIT]")
+        parser.add_option(
             "--logging-format", action="store", dest="logcapture_format",
             default=env.get('NOSE_LOGFORMAT') or self.logformat,
             metavar="FORMAT",
@@ -149,18 +162,28 @@ class LogCapture(Plugin):
             help="Clear all other logging handlers")
         parser.add_option(
             "--logging-level", action="store",
-            default='NOTSET', dest="logcapture_level",
+            default='WARNING', dest="logcapture_level",
             help="Set the log level to capture")
 
     def configure(self, options, conf):
         """Configure plugin."""
         self.conf = conf
-        if not options.logcapture or conf.loggingConfig:
-            self.enabled = False
         self.logformat = options.logcapture_format
         self.logdatefmt = options.logcapture_datefmt
         self.clear = options.logcapture_clear
         self.loglevel = options.logcapture_level
+        if not options.logcapture or conf.loggingConfig:
+            self.enabled = False
+        if (
+            "NOSE_CAPTURELOGS" in os.environ
+            and os.environ["NOSE_CAPTURELOGS"] == "1"
+        ) or options.capture_logs:
+            self.enabled = True
+        if (
+            "NOSE_LOGINIT" in os.environ
+            and os.environ["NOSE_LOGINIT"] == "1"
+        ) or options.logging_init:
+            logging.basicConfig(level=self.loglevel)
         if options.logcapture_filters:
             self.filters = options.logcapture_filters.split(',')
 
