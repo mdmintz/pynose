@@ -16,8 +16,11 @@ Changes in ``pynose`` from legacy ``nose`` include:
 * Fixes "DeprecationWarning: pkg_resources is deprecated as an API."
 * Fixes all ``flake8`` issues from the original ``nose``.
 * Replaces the ``imp`` module with the newer ``importlib`` module.
-* The default logging level now hides "debug" logs for less noise.
+* The default logging level now hides `"INFO"` logs for less noise.
+* Adds ``--capture-logs`` for hiding output from all logging levels.
+* Adds ``--logging-init`` to use ``logging.basicConfig(level)``.
 * The ``-s`` option is always active to see the output of ``print()``.
+* Adds ``--capture-output`` for hiding the output of ``print()``.
 * Adds ``--co`` as a shortcut to using ``--collect-only``.
 
 --------
@@ -363,9 +366,11 @@ Options
 
    Clear all other logging handlers
 
---logging-level=DEFAULT
+--logging-level=LEVEL
 
-   Set the log level to capture
+   Set the log level to capture. (Default: "WARNING")
+   Levels: ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+   You may need to include `--logging-init` to change the default.
 
 --with-coverage
 
@@ -547,4 +552,15 @@ Options
 
    Enable capturing output. This hides the output of print().
    (os.environ["NOSE_CAPTURE"] = "1")
+
+--capture-logs, --capture_logs
+
+   Enable capturing logs. This hides output from all log levels.
+   (os.environ["NOSE_CAPTURELOGS"] = "1")
+
+--logging-init
+
+   Using this will call `logging.basicConfig(level)`, which may
+   be needed if you're trying to change the default logging level
+   with `--logging-level=LEVEL`.
 ```
