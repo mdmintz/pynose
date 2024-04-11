@@ -96,7 +96,7 @@ setup(
         "Download": "https://pypi.org/project/pynose/#files",
         "PyPI": "https://pypi.org/project/pynose/",
         "Source": "https://github.com/mdmintz/pynose",
-        "Documentation": "https://nose.readthedocs.io/en/latest/",
+        "Documentation": "https://github.com/mdmintz/pynose",
     },
     package_data={"": ["*.txt"]},
     python_requires=">=3.7",
