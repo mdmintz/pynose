@@ -106,8 +106,8 @@ setup(
         "Environment :: MacOS X",
         "Environment :: Win32 (MS Windows)",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or " +
-            "Lesser General Public License (LGPL)",
+        "License :: OSI Approved :: GNU Library or "
+        "Lesser General Public License (LGPL)",
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
