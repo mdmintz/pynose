@@ -1,7 +1,12 @@
 Dual License of MIT or LGPL
 
-LGPL: Original "nose" code forked from https://pypi.org/project/nose/1.3.7/ (2015)
-MIT: New "pynose" code that wasn't part of the original. (2024)
+LGPL License from the original "nose" code.
+Link: github.com/nose-devs/nose/blob/master/lgpl.txt
+Fork origin: pypi.org/project/nose/1.3.7/
+
+MIT License for any new code in "pynose".
+
+(Use tools such as "git diff" to understand changes.)
 
 ----
 
@@ -26,27 +31,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-----
-
-GNU LESSER GENERAL PUBLIC LICENSE (LGPL) for the original "nose" code:
-
-Version 2.1, February 1999
-
-Copyright (C) 1991, 1999 Free Software Foundation, Inc.
-51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-Everyone is permitted to copy and distribute verbatim copies
-of this license document, but changing it is not allowed.
-
-[This is the first released version of the Lesser GPL. It also counts
-as the successor of the GNU Library Public License, version 2, hence
-the version number 2.1.]
-
-Preamble
-
-The licenses for most software are designed to take away your
-freedom to share and change it. By contrast, the GNU General Public
-Licenses are intended to guarantee your freedom to share and change
-free software--to make sure the software is free for all its users...
-
-----
