@@ -13,6 +13,10 @@ from nose.config import Config
 from importlib import _imp
 from importlib._bootstrap import _ERR_MSG, _builtin_from_name
 
+"""Adapted from the CPython 3.11 imp.py code.
+Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved.
+Originally licensed under the PSLv2 and incorporated under the LGPL 2.1."""
+# <Start of CPython code>
 acquire_lock = _imp.acquire_lock
 is_builtin = _imp.is_builtin
 init_frozen = _imp.init_frozen
@@ -123,6 +127,7 @@ def load_module(name, file, filename, details):
     sys.modules[name] = mod
     spec.loader.exec_module(mod)
     return mod
+# <End of CPython code>
 
 
 log = logging.getLogger(__name__)
