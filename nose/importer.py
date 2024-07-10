@@ -1,9 +1,4 @@
-"""Adapted from the CPython 3.11 imp.py code.
-Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved.
-Originally licensed under the PSLv2 and incorporated under the LGPL 2.1.
-(Code derived from CPython will be labeled specificially via comments.)
-
-Implements an importer that looks only in specific path (ignoring
+"""Implements an importer that looks only in specific path (ignoring
 sys.path), and uses a per-path cache in addition to sys.modules. This is
 necessary because test modules in different directories frequently have the
 same names, which means that the first loaded would mask the rest when using
@@ -18,6 +13,9 @@ from nose.config import Config
 from importlib import _imp
 from importlib._bootstrap import _ERR_MSG, _builtin_from_name
 
+"""Adapted from the CPython 3.11 imp.py code.
+Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved.
+Originally licensed under the PSLv2 and incorporated under the LGPL 2.1."""
 # <Start of CPython code>
 acquire_lock = _imp.acquire_lock
 is_builtin = _imp.is_builtin
