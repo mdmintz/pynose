@@ -1,4 +1,8 @@
-"""Implements an importer that looks only in specific path (ignoring
+"""Adapted from the CPython 3.11 imp.py code.
+Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved.
+Originally licensed under the PSLv2 and incorporated under the LGPL 2.1.
+
+Implements an importer that looks only in specific path (ignoring
 sys.path), and uses a per-path cache in addition to sys.modules. This is
 necessary because test modules in different directories frequently have the
 same names, which means that the first loaded would mask the rest when using
