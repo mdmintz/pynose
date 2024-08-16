@@ -86,8 +86,6 @@ from nose.plugins.base import Plugin
 from nose.util import tolist
 import collections
 
-log = logging.getLogger('nose.plugins.attrib')
-
 
 def attr(*args, **kwargs):
     """Decorator that adds attributes to classes or functions
@@ -130,6 +128,7 @@ class AttributeSelector(Plugin):
     def __init__(self):
         Plugin.__init__(self)
         self.attribs = []
+        self.verbose_skipped = False
 
     def options(self, parser, env):
         """Register command line options"""
@@ -145,6 +144,12 @@ class AttributeSelector(Plugin):
             help="Run only tests for whose attributes the Python "
             "expression EXPR evaluates to True [NOSE_EVAL_ATTR]"
         )
+        parser.add_option("--verbose-skipped-attr",
+          dest="verbose_skipped_attr",
+          default=False,
+          action="store_true",
+          help="Show debug messages when the test case is skipped"
+        )
 
     def configure(self, options, config):
         """Configure the plugin and system, based on selected options.
@@ -153,6 +158,7 @@ class AttributeSelector(Plugin):
         In that list, each list is a group of attributes,
         all of which must match for the rule to match."""
         self.attribs = []
+        self.logger = logging.getLogger('nose.plugins.attrib')
         if options.eval_attr:
             eval_attr = tolist(options.eval_attr)
             for attr in eval_attr:
@@ -181,6 +187,11 @@ class AttributeSelector(Plugin):
                 self.attribs.append(attr_group)
         if self.attribs:
             self.enabled = True
+
+        self.verbose_skipped = options.verbose_skipped_attr
+        if self.verbose_skipped:
+            self.logger.setLevel(logging.DEBUG)
+            self.logger.debug("Show skipped attr tests later ...")
 
     def validateAttrib(self, method, cls=None):
         """Verify whether a method has the required attributes
@@ -221,12 +232,21 @@ class AttributeSelector(Plugin):
 
     def wantFunction(self, function):
         """Accept the function if its attributes match."""
-        return self.validateAttrib(function)
+        is_valid = self.validateAttrib(function)
+        if self.verbose_skipped and not is_valid:
+            self.logger.debug("Skip the test: %s", function.__name__)
+        return is_valid
 
     def wantMethod(self, method):
         """Accept the method if its attributes match."""
         try:
-            cls = method.__self__.__class__
+            cls = method.im_class
         except AttributeError:
-            return False
-        return self.validateAttrib(method, cls)
+            try:
+                cls = method.__self__.__class__
+            except AttributeError:
+                return False
+        is_valid = self.validateAttrib(method, cls)
+        if self.verbose_skipped and not is_valid:
+            self.logger.debug("Skip the test method: %s", method.__name__)
+        return is_valid

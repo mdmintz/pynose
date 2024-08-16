@@ -175,6 +175,8 @@ class Config(object):
         self.configSection = 'nosetests'
         self.debug = env.get('NOSE_DEBUG')
         self.debugLog = env.get('NOSE_DEBUG_LOG')
+        self.logPropagate = bool(env.get('NOSE_LOG_PROPAGATE', False))
+        self.logNoLogHandlers = bool(env.get('NOSE_NO_LOG_HANDLERS', False))
         self.exclude = None
         self.getTestCaseNamesCompat = False
         self.includeExe = env.get(
@@ -333,7 +335,7 @@ class Config(object):
             handler = logging.StreamHandler(self.logStream)
         handler.setFormatter(format)
         logger = logging.getLogger('nose')
-        logger.propagate = 0
+        logger.propagate = self.logPropagate
         found = False
         if self.debugLog:
             debugLogAbsPath = os.path.abspath(self.debugLog)
@@ -352,6 +354,10 @@ class Config(object):
                     found = True
         if not found:
             logger.addHandler(handler)
+
+        if self.logNoLogHandlers:
+            logger.handlers = []
+
         lvl = logging.WARNING
         if self.verbosity >= 5:
             lvl = 0
