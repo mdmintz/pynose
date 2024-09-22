@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel>=0.42.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pynose"
+readme = "README.md"
+dynamic = [
+    "urls",
+    "version",
+    "license",
+    "authors",
+    "scripts",
+    "keywords",
+    "classifiers",
+    "description",
+    "entry-points",
+    "dependencies",
+    "requires-python",
+    "optional-dependencies",
+]
+
+[tool.setuptools]
+packages = ["nose", "nose.plugins", "nose.sphinx", "nose.tools"]
+
+[flake8]
+ignore = ["W503"]
+
+[nosetests]
+nocapture = ["1"]
+logging-level = ["INFO"]
