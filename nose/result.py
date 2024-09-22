@@ -5,6 +5,8 @@ Provides a TextTestResult that extends unittest's _TextTestResult to
 provide support for error classes (such as the builtin skip and deprecated
 classes), and hooks for plugins to take over or extend reporting."""
 import logging
+import os
+from contextlib import suppress
 from unittest import TextTestResult as _TextTestResult
 from nose.config import Config
 from nose.util import isclass, ln as _ln
@@ -95,7 +97,15 @@ class TextTestResult(_TextTestResult):
         taken = float(stop - start)
         run = self.testsRun
         plural = run != 1 and "s" or ""
-        writeln(self.separator2)
+        terminal_width = 40  # The default width if failure to calculate
+        with suppress(Exception):
+            terminal_width = os.get_terminal_size().columns
+            if not isinstance(terminal_width, int):
+                terminal_width = 40
+            elif terminal_width < 26:
+                terminal_width = 26
+        separator = "-" * terminal_width
+        writeln(separator[:70])
         writeln("Ran %s test%s in %.3fs" % (run, plural, taken))
         writeln()
         summary = {}
