@@ -167,7 +167,13 @@ class TestBase(unittest.TestCase):
         return str(self)
 
     def runTest(self):
-        self.test(*self.arg)
+        try:
+            self.test(*self.arg)
+        except Exception as e:
+            if "required positional argument" in str(e):
+                self.skipTest("pynose doesn't support pytest fixtures.")
+            else:
+                raise
 
     def shortDescription(self):
         if hasattr(self.test, 'description'):
