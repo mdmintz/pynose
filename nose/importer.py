@@ -11,7 +11,11 @@ import importlib.util
 import tokenize
 from nose.config import Config
 from importlib import _imp
-from importlib._bootstrap import _ERR_MSG, _builtin_from_name
+from importlib._bootstrap import _builtin_from_name
+try:
+    from importlib._bootstrap import _ERR_MSG
+except Exception:
+    _ERR_MSG = 'No module named {!r}'
 
 """Adapted from the CPython 3.11 imp.py code.
 Copyright (c) 2001-2023 Python Software Foundation; All Rights Reserved.
