@@ -386,7 +386,7 @@ class TestLoader(unittest.TestLoader):
                 return self.suiteClass([
                     self.suiteClass(suite),
                     unittest.TestLoader.loadTestsFromNames(self, names, module)
-                    ])
+                ])
         return unittest.TestLoader.loadTestsFromNames(self, names, module)
 
     def loadTestsFromTestCase(self, testCaseClass):

@@ -254,11 +254,11 @@ class Doctest(Plugin):
                 or (
                     self.conf.include
                     and [
-                            _f for _f in [
-                                inc.search(name)
-                                for inc in self.conf.include
-                            ] if _f
-                        ]
+                        _f for _f in [
+                            inc.search(name)
+                            for inc in self.conf.include
+                        ] if _f
+                    ]
                 )
             )
             and (
@@ -359,7 +359,7 @@ class DocTestCase(doctest.DocTestCase):
     def _displayhook(self, value):
         if value is None:
             return
-        setattr(builtin_mod, self._result_var,  value)
+        setattr(builtin_mod, self._result_var, value)
         print(repr(value))
 
     def tearDown(self):

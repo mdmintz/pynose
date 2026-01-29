@@ -98,7 +98,7 @@ def _import_mp():
         m = Manager()
         signal.signal(signal.SIGINT, old)
         Queue, Pool, Event, Value, Array = (
-                m.Queue, m.Pool, m.Event, m.Value, m.Array
+            m.Queue, m.Pool, m.Event, m.Value, m.Array
         )
     except ImportError:
         warn("multiprocessing module is not available, multiprocess plugin "
@@ -309,7 +309,7 @@ class MultiProcessTestRunner(TextTestRunner):
                 i, testQueue, resultQueue, shouldStop, result
             )
             workers.append(p)
-            log.debug("Started worker process %s", i+1)
+            log.debug("Started worker process %s", i + 1)
         total_tasks = len(tasks)
         nexttimeout = self.config.multiprocess_timeout
         thrownError = None

@@ -57,7 +57,7 @@ def tbsource(tb, context=6):
     lineno = tb.tb_lineno
     frame = tb.tb_frame
     if context > 0:
-        start = lineno - 1 - context//2
+        start = lineno - 1 - context // 2
         log.debug("lineno: %s start: %s", lineno, start)
         try:
             lines, dummy = inspect.findsource(frame)
@@ -67,12 +67,12 @@ def tbsource(tb, context=6):
             all_lines = lines
             start = max(start, 1)
             start = max(0, min(start, len(lines) - context))
-            lines = lines[start:start+context]
+            lines = lines[start:start + context]
             index = lineno - 1 - start
             if index > 0:
-                while lines[index-1].strip().endswith('\\'):
+                while lines[index - 1].strip().endswith('\\'):
                     start -= 1
-                    lines = all_lines[start:start+context]
+                    lines = all_lines[start:start + context]
     else:
         lines, index = [''], 0
     log.debug("tbsource lines '''%s''' around index %s", lines, index)
@@ -91,9 +91,9 @@ def find_inspectable_lines(lines, pos):
     toinspect = []
     home = lines[pos]
     home_indent = ind.match(home).groups()[0]
-    before = lines[max(pos-3, 0):pos]
+    before = lines[max(pos - 3, 0):pos]
     before.reverse()
-    after = lines[pos+1:min(pos+4, len(lines))]
+    after = lines[pos + 1:min(pos + 4, len(lines))]
     for line in before:
         if ind.match(line).groups()[0] == home_indent:
             toinspect.append(line)
@@ -101,7 +101,7 @@ def find_inspectable_lines(lines, pos):
             break
     toinspect.reverse()
     toinspect.append(home)
-    home_pos = len(toinspect)-1
+    home_pos = len(toinspect) - 1
     continued = cnt.search(home)
     for line in after:
         if (
@@ -128,7 +128,7 @@ class Expander:
     def __call__(self, ttype, tok, start, end, line):
         if self.lpos is not None:
             if start[1] >= self.lpos:
-                self.expanded_source += ' ' * (start[1]-self.lpos)
+                self.expanded_source += ' ' * (start[1] - self.lpos)
             elif start[1] < self.lpos:
                 self.expanded_source += ' ' * start[1]
         self.lpos = end[1]

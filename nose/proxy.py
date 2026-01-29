@@ -83,8 +83,8 @@ class ResultProxy(object):
         assert (test is self.test
                 or test is case
                 or test is getattr(case, '_nose_case', None)), (
-                "ResultProxy for %r (%s) was called with test %r (%s)"
-                % (self.test, id(self.test), test, id(test)))
+            "ResultProxy for %r (%s) was called with test %r (%s)"
+            % (self.test, id(self.test), test, id(test)))
 
     def afterTest(self, test):
         self.assertMyTest(test)
