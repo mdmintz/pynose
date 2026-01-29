@@ -23,9 +23,6 @@ dynamic = [
 [tool.setuptools]
 packages = ["nose", "nose.plugins", "nose.sphinx", "nose.tools"]
 
-[flake8]
-ignore = ["W503"]
-
 [nosetests]
 nocapture = ["1"]
 logging-level = ["INFO"]

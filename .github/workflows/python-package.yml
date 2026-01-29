@@ -39,7 +39,7 @@ jobs:
       run: |
         pip install flake8
         # Stop the build if there are flake8 issues
-        flake8 . --count --show-source --statistics --exclude=temp
+        flake8 . --count --show-source --statistics
     - name: Make sure pynose is working
       run: |
         echo "def test_1(): pass" > nothing.py
