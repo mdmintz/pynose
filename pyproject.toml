@@ -4,28 +4,65 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pynose"
-readme = "README.md"
-dynamic = [
-    "urls",
-    "version",
-    "license",
-    "authors",
-    "scripts",
-    "keywords",
-    "classifiers",
-    "description",
-    "entry-points",
-    "dependencies",
-    "requires-python",
+dynamic = [                                    
+    "version",                                 
+    "dependencies",                                  
     "optional-dependencies",
 ]
+description = "pynose fixes nose to extend unittest and make testing easier"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "LGPL-2.1-or-later"}
+keywords = ["test", "unittest", "doctest", "automatic", "discovery"]
+authors = [
+    {name = "Michael Mintz", email = "mdmintz@gmail.com"},
+]
+maintainers = [
+    {name = "Michael Mintz", email = "mdmintz@gmail.com"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: MacOS X",
+    "Environment :: Win32 (MS Windows)",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU Lesser General Public License v2 or later (LGPLv2+)",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Testing",
+]
+
+[project.urls]
+Homepage = "https://github.com/mdmintz/pynose"
+Documentation = "https://github.com/mdmintz/pynose"
+Repository = "https://github.com/mdmintz/pynose"
+Download = "https://pypi.org/project/pynose/#files"
+PyPI = "https://pypi.org/project/pynose/"
+
+[project.scripts]
+nosetests = "nose.core:run_exit"
+pynose = "nose.core:run_exit"
 
 [tool.setuptools]
 packages = ["nose", "nose.plugins", "nose.sphinx", "nose.tools"]
 
-[flake8]
-ignore = ["W503"]
+[tool.setuptools.package-data]
+nose = ["usage.txt"]
+
+[tool.setuptools.dynamic]
+version = {attr = "nose.__version__.__version__"}
 
 [nosetests]
 nocapture = ["1"]
 logging-level = ["INFO"]
+
