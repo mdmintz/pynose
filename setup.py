@@ -89,7 +89,7 @@ setup(
     description=description,
     long_description=long_description,
     long_description_content_type="text/markdown",
-    license="GNU LGPL",
+    license="LGPL-2.1-or-later",
     keywords="test unittest doctest automatic discovery",
     url="https://github.com/mdmintz/pynose",
     project_urls={
